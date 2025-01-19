@@ -8,7 +8,7 @@ class User(AbstractUser):
     name =models.CharField(max_length=20,verbose_name="역할")
     profile_image = models.ImageField(upload_to='profile_images/',null=True, blank=True, verbose_name="프로필 이미지")
     gender = models.CharField(max_length=5,choices=[('M',"남자"),("F","여자"),("N","비공개")], verbose_name ="성별")
-    birth= models.DateField(null=True,blank=True,null=True,  blank=True, verbose_name="생년월일")
+    birth= models.DateField(null=True,blank=True,verbose_name="생년월일")
     phone_number = models.CharField(max_length=15, blank=True, null=True, verbose_name="전화번호")   
 
 
