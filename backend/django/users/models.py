@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from users.models import Center
 # Create your models here.
 
 #1.역할 구분(role) 2. 이름(name) 3.이미지(profile_img) 4.성별(gender) 5.생년월일(birth) 6.전화번호(phone_number) 7.아이디(username) 8.비번(password)
