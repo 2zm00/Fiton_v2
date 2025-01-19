@@ -34,7 +34,7 @@ class Instructor(models.Model):
 
 
 
-class Member
+class Member(models.Model):
     user = models.OneToOneField(User,on_delete= models.CASCADE , verbose_name="사용자 ")
     def __str__(self):
         return f"{self.user.name} (회원)"
