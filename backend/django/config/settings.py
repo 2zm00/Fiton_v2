@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'analytics',
     'map',
     'centers',
+    'reviews',
 ]
 
 MIDDLEWARE = [
