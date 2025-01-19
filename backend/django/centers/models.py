@@ -1,6 +1,6 @@
 from django.db import models
-from users.models import CenterOwner
-
+from users.models import CenterOwner,Member
+from datetime import datetime
 # Create your models here.
 
 class Exercise(models.Model):
@@ -26,3 +26,19 @@ class Center(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.location})"
+
+class Membership(models.Model):
+    center = models.ForeignKey(Center,on_delete=models.CASCADE,related_name='center_memberships',verbose_name="센터") 
+    price = models.DecimalField(max_digits=10,decimal_places=0,verbose_name="가격(원)")
+    duration = models.IntegerField(verbose_name="기간(일)")
+    def __str__(self):
+         return f"{self.center.name} - {self.price:,}원 ({self.duration}일)"
+
+class MembershipOwner(models.Model):
+    member = models.ForeignKey(Member,on_delete=models.CASCADE,related_name='membership_owners',verbose_name="수강생")
+    center = models.ForeignKey(Center,on_delete=models.CASCADE,related_name='membership_owners',verbose_name="센터") 
+    start_date = models.DateField(auto_now_add=True,  verbose_name="시작 날짜")
+    end_date = models.DateField(verbose_name="종료 날짜")
+    is_active = models.BooleanField(default=True,verbose_name="활성화 여부")
+    def __str__(self):
+         return f"회원:{self.member.user.name} - {self.center.name}"

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from users.models import Instructor ,Member
 from centers.models import Center,Exercise
-from datetime
+
 # 수업 모델 
 class Lesson(models.Model):
     name = models.CharField(max_length=255, verbose_name="제목")
