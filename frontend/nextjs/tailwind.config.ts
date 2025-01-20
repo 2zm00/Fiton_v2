@@ -11,6 +11,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        ghostwhite: "#F8F8FF",
+      },
+      fontFamily: {
+        sans: ['Noto Sans KR', 'sans-serif'],
       },
     },
   },
