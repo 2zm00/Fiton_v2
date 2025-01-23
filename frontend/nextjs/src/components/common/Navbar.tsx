@@ -34,7 +34,7 @@ export default function Navbar() {
 
 
 
-			<ul className="hidden lg:flex space-x-4">
+			<ul className="hidden lg:flex space-x-12">
 				<li><Link href="/instructor" className="hover:text-gray-600">강사</Link></li>
 				<li><Link href="/center" className="hover:text-gray-600">센터찾기</Link></li>
 				<li><Link href="/lesson" className="hover:text-gray-600">수업</Link></li>
