@@ -1,9 +1,15 @@
 'use client'
 
 import React from "react"
+import { motion } from "framer-motion";
 
 export default function Home() {
     return (
+      <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+    >
     <div className="container mx-auto px-4 py-3">
       <h1 className="text-2xl font-bold">핏온!!</h1>
       <p className="text-lg">메인페이지입니다.</p>
@@ -22,6 +28,7 @@ export default function Home() {
         지도
       </div>
     </div>
+    </motion.div>
     
   );
 };
