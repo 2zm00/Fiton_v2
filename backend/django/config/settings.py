@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'notifications',
     'analytics',
     'map',
+    'center'
 ]
 
 MIDDLEWARE = [
