@@ -1,35 +1,16 @@
 'use client';
 
 import React from 'react';
+import ImageCard from '../common/ImageCard';
 
-interface LessonCardProps {
-  image: string; // 수업 이미지 경로
-  title: string; // 수업 제목
-  description: string; // 수업 설명
-}
-
-export default function LessonCard({
-	image,
-	title,
-	description,
-	}: LessonCardProps) {
+export default function LessonCard() {
 	return (
-	<div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
-		{/* 수업 이미지 */}
-		<img
-		src={image}
-		alt={title}
-		className="w-full h-[200px] object-cover"
-		/>
-		{/* 수업 정보 */}
-		<div className="p-4">
-		<h3 className="text-xl font-bold mb-2">{title}</h3>
-		<p className="text-gray-600 mb-4">{description}</p>
-		{/* 버튼 */}
-		<button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-			자세히 보기
-		</button>
-		</div>
-	</div>
+	<ImageCard
+		image="/images/lesson1.jpg"
+		title="요가 클래스"
+		description="몸과 마음의 균형을 찾는 요가 클래스입니다."
+		buttonText="수업 예약하기"
+		onButtonClick={() => console.log('수업 예약 페이지로 이동')}
+	/>
 	);
 }
