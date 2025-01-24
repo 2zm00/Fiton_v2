@@ -13,7 +13,7 @@ class Lesson(models.Model):
     location = models.TextField(max_length=255,verbose_name="수업 장소")
     duration = models.PositiveIntegerField(default=60, verbose_name="진행 시간(분)")
     def __str__(self):
-        return f"{self.name} ({self.center.exercise.name})"
+        return f"{self.name} ({self.exercise.name})"
 
 class Lesson_schedule(models.Model):
     lesson= models.ForeignKey(Lesson , on_delete=models.CASCADE, related_name='lesson_schedules',verbose_name="수업 내용")
@@ -38,4 +38,4 @@ class LessonTicketOwner(models.Model):
     quantity=models.PositiveIntegerField(default=0,verbose_name="수업권 개수")
     used_count = models.PositiveIntegerField(default=0,verbose_name="사용한 수업권 횟수") 
     def __str__(self):
-        return f"수강생 {self.member.name}, 수업: {self.Lesson_ticket.lesson.name}"
+        return f"수강생 {self.member.user.name}, 수업: {self.Lesson_ticket.lesson.name}"

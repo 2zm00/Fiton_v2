@@ -1,6 +1,6 @@
 from django.db import models
 from lessons.models import Lesson_schedule
-from users.models import User
+from users.models import FitonUser
 from django.utils import timezone
 # Create your models here.
 class Reservation(models.Model):
@@ -10,7 +10,7 @@ class Reservation(models.Model):
         ('canceled', '예약 취소'),
     ]
     lesson_schedule = models.ForeignKey(Lesson_schedule, on_delete=models.CASCADE, related_name='reservations')
-    member = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'member'})
+    member = models.ForeignKey(FitonUser, on_delete=models.CASCADE, limit_choices_to={'role': 'member'})
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='confirmed')
     reserved_at = models.DateTimeField(auto_now_add=True)
     cancel_at = models.DateTimeField(null=True,blank=True)
@@ -37,4 +37,12 @@ class Attendance(models.Model):
         return f"Attendance for {self.reservation.member.username}: {self.status}"
     def can_review(self):
         return self.status == 'attended' and timezone.now() > self.reservation.lesson_schedule.lesson.review_permission
+    
+class CompletedLesson(models.Model):
+    member = models.ForeignKey(FitonUser, on_delete=models.CASCADE, limit_choices_to={'role': 'member'}, verbose_name="수강생")
+    lesson_schedule = models.ForeignKey(Lesson_schedule, on_delete=models.CASCADE, verbose_name="수업 스케줄")
+    completed_at = models.DateTimeField(auto_now_add=True, verbose_name="완료 일시")
+    feedback = models.TextField(null=True, blank=True, verbose_name="수강생 피드백")
 
+    def __str__(self):
+        return f"{self.member.name} - {self.lesson_schedule.lesson.name} (완료)"

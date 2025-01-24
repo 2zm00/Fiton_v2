@@ -8,7 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         today = date.today()
         # 종료 날짜가 지난 활성 상태 멤버십 비활성화
-        expired_memberships = Membership.objects.filter(end_date__lt=today, is_active=True)
-        count = expired_memberships.update(is_active=False)
+        memberships = Membership.objects.filter(end_date__lt=today, is_active=True)
+        count = memberships.update(is_active=False)
 
         self.stdout.write(f"{count} expired memberships have been deactivated.")
