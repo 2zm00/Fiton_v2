@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+AUTH_USER_MODEL = 'users.FitonUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
     'users',
     'lessons',
     'payments',
@@ -47,6 +53,8 @@ INSTALLED_APPS = [
     'notifications',
     'analytics',
     'map',
+    'centers',
+    'reviews',
 ]
 
 MIDDLEWARE = [
