@@ -34,6 +34,7 @@ def role_select(request):
     return Response({"message": "Role updated successfully.", "role": user.role})
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def user_detail(request):
     
     user = request.user
