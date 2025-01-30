@@ -4,24 +4,29 @@ from .models import CenterOwner, Instructor, Member
 FitonUser = get_user_model()
 
 class FitonUserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    username = serializers.CharField(required=False)
+    password = serializers.CharField(write_only=True,required=False)
 
     class Meta:
         model = FitonUser
-        fields = ('id', 'username', 'password',)
+        fields = ('id', 'username', 'password', 'name', 'profile_image', 'gender', 'birth', 'phone_number')
 
     def create(self, validated_data):
+        
         user = FitonUser.objects.create_user(
             username=validated_data['username'],
-            password=validated_data['password'],
+            password=validated_data['password']
         )
-        return user
 
-class UserAdditionalInfoSerializer(serializers.ModelSerializer):
-    class Meta: 
-        model = FitonUser
-        fields = ['name', 'profile_image', 'gender','birth', 'phone_number']
         
+        user.name = validated_data.get('name', None)
+        user.profile_image = validated_data.get('profile_image', None)
+        user.gender = validated_data.get('gender', "None")
+        user.birth = validated_data.get('birth', None)
+        user.phone_number = validated_data.get('phone_number', None)
+
+        user.save()
+        return user
 
 class CenterOwnerSerializer(serializers.ModelSerializer):
     class Meta:

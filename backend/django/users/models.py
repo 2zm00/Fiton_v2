@@ -12,7 +12,7 @@ class FitonUser(AbstractUser):
     )
     name =models.CharField(max_length=20,null=True, blank=True, verbose_name="이름")
     profile_image = models.ImageField(upload_to='profile_images/',null=True, blank=True, verbose_name="프로필 이미지")
-    gender = models.CharField(max_length=6,choices=[('Male',"남자"),("Female","여자"),("None","비공개")], verbose_name ="성별")
+    gender = models.CharField(max_length=6,choices=[('Male',"남자"),("Female","여자"),("None","비공개")],null=True, blank=True, verbose_name ="성별")
     role = models.CharField(max_length=20,null=True, blank=True, choices=ROLE_CHOICES,  verbose_name="역할")
     birth= models.DateField(null=True,blank=True,verbose_name="생년월일")
     phone_number = models.CharField(max_length=15, blank=True, null=True, verbose_name="전화번호")   
