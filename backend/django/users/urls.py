@@ -8,6 +8,7 @@ from . import views
 urlpatterns = [
     path('register/', views.register),
     path('role/', views.role_select),
-    path('user_add_info/', views.user_detail),
-    # path('', include(router.urls)),
+    path('user_add_info/', views.user_add_info),
+    path('user_delete/', views.user_delete),
+    
 ]

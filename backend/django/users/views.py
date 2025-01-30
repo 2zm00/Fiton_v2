@@ -5,8 +5,9 @@ from rest_framework.permissions import AllowAny,IsAuthenticated
 from .serializers import FitonUserSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
-from .serializers import CenterOwnerSerializer,MemberSerializer,InstructorSerializer,UserAdditionalInfoSerializer
-
+from .serializers import CenterOwnerSerializer,MemberSerializer,InstructorSerializer
+from django.shortcuts import get_object_or_404
+from .models import FitonUser,Member,Instructor,CenterOwner
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -33,27 +34,100 @@ def role_select(request):
 
     return Response({"message": "Role updated successfully.", "role": user.role})
 
-@api_view(['POST'])
+@api_view(['GET', 'POST', 'PATCH'])
 @permission_classes([IsAuthenticated])
-def user_detail(request):
-    
+def user_add_info(request):
     user = request.user
-    user_info_serializer = UserAdditionalInfoSerializer(user,data=request.data)
+    is_partial = request.method == 'PATCH'
+    if request.method == 'GET':
+        user_info_serializer = FitonUserSerializer(user)
+        if user.role == 'centerowner':
+            role_serializer = CenterOwnerSerializer(CenterOwner.objects.get(user=user))
+        elif user.role == 'instructor':
+            role_serializer = InstructorSerializer(Instructor.objects.get(user=user))
+        elif user.role == 'member':
+            role_serializer = MemberSerializer(Member.objects.get(user=user))
+        else:
+            return Response({"error": "Invalid role or role not set."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({
+            "user_data": user_info_serializer.data,
+            "role_data": role_serializer.data
+        })
+    user_info_serializer = FitonUserSerializer(user, data=request.data, partial=is_partial)
     if user_info_serializer.is_valid():
-        user_info_serializer.save(user=user)
+        user_info_serializer.save()
     else:
         return Response(user_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
     if user.role == 'centerowner':
-        role_serializer = CenterOwnerSerializer(data=request.data)
+        role_instance = get_object_or_404(CenterOwner, user=user) if request.method == 'PATCH' else None
+        role_serializer = CenterOwnerSerializer(instance=role_instance, data=request.data, partial=is_partial)
     elif user.role == 'instructor':
-        role_serializer = InstructorSerializer(data=request.data)
+        role_instance = get_object_or_404(Instructor, user=user) if request.method == 'PATCH' else None
+        role_serializer = InstructorSerializer(instance=role_instance, data=request.data, partial=is_partial)
     elif user.role == 'member':
-        role_serializer = MemberSerializer(data=request.data)
+        role_instance = get_object_or_404(Member, user=user) if request.method == 'PATCH' else None
+        role_serializer = MemberSerializer(instance=role_instance, data=request.data, partial=is_partial)
     else:
         return Response({"error": "Invalid role or role not set."}, status=status.HTTP_400_BAD_REQUEST)
 
     if role_serializer.is_valid():
-        role_serializer.save(user=user)
-        return Response({"message": "Role details saved successfully."})
+        if request.method == 'POST':
+            role_serializer.save(user=user)
+        else:
+            role_serializer.save()
+
+        return Response({
+            "message": "User and role details updated successfully.",
+            "user_data": user_info_serializer.data,
+            "role_data": role_serializer.data
+        })
+
     return Response(role_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+   
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def user_delete(request):
+    user=request.user
+    user.delete()
+    return Response({"message": "User account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    # user = request.user
+    # user_info_serializer = FitonUserSerializer(user,data=request.data,partial=True)
+    # if user_info_serializer.is_valid():
+    #     user_info_serializer.save()
+    # else:
+    #     return Response(user_info_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    # if user.role == 'centerowner':
+    #     role_serializer = CenterOwnerSerializer(data=request.data)
+    # elif user.role == 'instructor':
+    #     role_serializer = InstructorSerializer(data=request.data)
+    # elif user.role == 'member':
+    #     role_serializer = MemberSerializer(data=request.data)
+    # else:
+    #     return Response({"error": "Invalid role or role not set."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # if role_serializer.is_valid():
+    #     role_serializer.save(user_id=user.id)
+    #     return Response({"message": "Role details saved successfully."})
+    # return Response(role_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
