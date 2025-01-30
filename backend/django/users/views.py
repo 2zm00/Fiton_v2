@@ -25,14 +25,14 @@ def role_select(request):
     role = request.data.get('role')
 
     if not role:
-        return Response({"error": "Role is required."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "역할이 필요합니다"}, status=status.HTTP_400_BAD_REQUEST)
     if role not in ['member', 'instructor', 'centerowner']:
-        return Response({"error": "Invalid role."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "유효하지 않은 역할입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
     user.role = role
     user.save()
 
-    return Response({"message": "Role updated successfully.", "role": user.role})
+    return Response({"message": "역할이 성공적으로 변경되었습니다.", "role": user.role})
 
 @api_view(['GET', 'POST', 'PATCH'])
 @permission_classes([IsAuthenticated])
@@ -48,7 +48,7 @@ def user_add_info(request):
         elif user.role == 'member':
             role_serializer = MemberSerializer(Member.objects.get(user=user))
         else:
-            return Response({"error": "Invalid role or role not set."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "유효하지 않은 역할이거나 역할이 설정되지 않았습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
             "user_data": user_info_serializer.data,
@@ -70,7 +70,7 @@ def user_add_info(request):
         role_instance = get_object_or_404(Member, user=user) if request.method == 'PATCH' else None
         role_serializer = MemberSerializer(instance=role_instance, data=request.data, partial=is_partial)
     else:
-        return Response({"error": "Invalid role or role not set."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "유효하지 않은 역할이거나 역할이 설정되지 않았습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
     if role_serializer.is_valid():
         if request.method == 'POST':
@@ -79,7 +79,7 @@ def user_add_info(request):
             role_serializer.save()
 
         return Response({
-            "message": "User and role details updated successfully.",
+            "message": "사용자 정보 및 역할 정보가 성공적으로 업데이트되었습니다.",
             "user_data": user_info_serializer.data,
             "role_data": role_serializer.data
         })
@@ -92,7 +92,7 @@ def user_add_info(request):
 def user_delete(request):
     user=request.user
     user.delete()
-    return Response({"message": "User account deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    return Response({"message": "사용자 계정이 성공적으로 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
    
    
    
