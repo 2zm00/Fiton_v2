@@ -8,25 +8,25 @@ export default function InstructorListPage() {
 	const instructors = [
 	{
 		id: 1,
-		image: '/images/instructor1.jpg',
+		image: '/images/ins1.jpg',
 		name: '강사 A',
 		description: '전문적인 트레이닝과 활력을 주는 최고의 강사입니다.',
 	},
 	{
 		id: 2,
-		image: '/images/instructor2.jpg',
+		image: '/images/ins29.jpg',
 		name: '강사 B',
 		description: '체계적인 운동 프로그램을 제공합니다.',
 	},
 	{
 		id: 3,
-		image: '/images/instructor3.jpg',
+		image: '/images/ins12.jpg',
 		name: '강사 C',
 		description: '건강한 라이프스타일을 선물합니다.',
 	},
 	{
 		id: 4,
-		image: '/images/instructor4.jpg',
+		image: '/images/ins14.jpg',
 		name: '강사 D',
 		description: '운동의 즐거움을 가르치는 전문가입니다.',
 	},

@@ -1,7 +1,19 @@
 import Link from "next/link";
 
+interface LoginCardProps {
+	username: string;
+	password: string;
+	onUsernameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onSubmit: (e: React.FormEvent) => void;
+  }
 
-export default function LoginCard() {
+export default function LoginCard({username,
+	password,
+	onUsernameChange,
+	onPasswordChange,
+	onSubmit,
+  }: LoginCardProps) {
 	return (
 		<div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
 		{/* 로고 */}
@@ -11,16 +23,18 @@ export default function LoginCard() {
 		</div>
 
 		{/* 로그인 폼 */}
-		<form>
-			{/* 이메일 입력 */}
+		<form onSubmit={onSubmit}>
+			{/* 아이디 입력 */}
 			<div className="mb-4">
-			<label htmlFor="email" className="block text-sm font-medium text-gray-700">
-				이메일
+			<label htmlFor="username" className="block text-sm font-medium text-gray-700">
+				아이디
 			</label>
 			<input
-				type="email"
-				id="email"
-				placeholder="이메일을 입력하세요"
+				type="username"
+				id="username"
+				placeholder="아이디를 입력하세요"
+				value={username}
+				onChange={onUsernameChange}
 				className="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
 			/>
 			</div>
@@ -34,6 +48,8 @@ export default function LoginCard() {
 				type="password"
 				id="password"
 				placeholder="비밀번호를 입력하세요"
+				value={password}
+				onChange={onPasswordChange}
 				className="mt-1 block w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
 			/>
 			</div>

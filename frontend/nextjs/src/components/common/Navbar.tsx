@@ -1,15 +1,19 @@
-'use client'
+'use client';
 
 import React, { useState } from "react"
 import Link from 'next/link';
 import Image from 'next/image';
+import { signOut, useSession } from "next-auth/react";
+
 
 export default function Navbar() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-	};
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
 
     return (
 		<nav className="bg-opacity-90 backdrop-blur-lg shadow-sm fixed top-0 w-full z-50">
@@ -39,9 +43,31 @@ export default function Navbar() {
 				<li><Link href="/center" className="hover:text-gray-600">센터찾기</Link></li>
 				<li><Link href="/lesson" className="hover:text-gray-600">수업</Link></li>
 				<li><Link href="/location" className="hover:text-gray-600">지도</Link></li>
-				<li><Link href="#user" className="hover:text-gray-600">인증(내정보/로그아웃/알림)</Link></li>
-				<li><Link href="/login" className="hover:text-gray-600">로그인</Link></li>
-				<li><Link href="#register" className="hover:text-gray-600">회원가입</Link></li>
+				{session ? (
+            <>
+              {/* 로그인된 경우 */}
+				<li className="text-gray-700 font-medium">안녕하세요, {session.username || "사용자"}님!</li>
+				<li>
+				<button onClick={() => signOut()} className="text-red-500 hover:text-red-600">
+					로그아웃
+				</button>
+				</li>
+			</>
+			) : (
+			<>
+				{/* 로그아웃된 경우 */}
+				<li>
+				<Link href="/login" className="hover:text-gray-600">
+					로그인
+				</Link>
+				</li>
+				<li>
+				<Link href="/register" className="hover:text-gray-600">
+					회원가입
+				</Link>
+				</li>
+            </>
+				)}
 			</ul>
 		</div>
 
@@ -49,7 +75,7 @@ export default function Navbar() {
             <div className="absolute top-full left-0 w-full bg-ghostwhite bg-opacity-90 backdrop-blur-md shadow-sm lg:hidden">
             <ul className="flex flex-col space-y-2 p-4 font-noto">
                 <li>
-                <Link href="/" onClick={toggleMenu} className="hover:text-gray-600">
+                <Link href="/instructor" onClick={toggleMenu} className="hover:text-gray-600">
                     강사
                 </Link>
 				</li>
@@ -68,22 +94,32 @@ export default function Navbar() {
                     지도
                 </Link>
 				</li>
-				<li>
-                <Link href="#user" onClick={toggleMenu} className="hover:text-gray-600">
-                    인증(내정보/로그아웃/알림)
+				{session ? (
+            <>
+              {/* 로그인된 경우 */}
+              <li className="text-gray-700 font-medium">안녕하세요, {session.username || "사용자"}님!</li>
+              <li>
+                <button onClick={() => signOut()} className="text-red-500 hover:underline">
+                  로그아웃
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              {/* 로그아웃된 경우 */}
+              <li>
+                <Link href="/login" className="hover:text-gray-600">
+                  로그인
                 </Link>
-				</li>
-				<li>
-                <Link href="/login" onClick={toggleMenu} className="hover:text-gray-600">
-                    로그인
+              </li>
+              <li>
+                <Link href="/register" className="hover:text-gray-600">
+                  회원가입
                 </Link>
-				</li>
-				<li>
-                <Link href="#register" onClick={toggleMenu} className="hover:text-gray-600">
-                    회원가입
-                </Link>
-                </li>
-            </ul>
+              </li>
+            </>
+			)}
+			</ul>
             </div>
         )}
     </nav>
