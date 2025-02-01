@@ -4,7 +4,7 @@ import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import "./globals.css";
 import { Noto_Sans_KR, Poppins } from 'next/font/google';
-import SessionProvider from './providers/SessionProvider';
+import { Provider } from './providers/SessionProvider';
 
 const notosans = Noto_Sans_KR({
   weight: ['400', '700'], // Regular, Bold
@@ -35,11 +35,11 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${notosans.variable}`}>
       <body>
-        <SessionProvider>
+        <Provider>
         <Navbar />
         {children}
         <Footer />
-        </SessionProvider>
+        </Provider>
       </body>
     </html>
   );
