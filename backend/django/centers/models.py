@@ -4,13 +4,13 @@ from datetime import datetime
 # Create your models here.
 
 class Exercise(models.Model):
-    name = models.CharField(max_length=100, verbose_name="운동 이름")
+    name = models.CharField(max_length=100, unique=True, verbose_name="운동 이름")
     
     def __str__(self):
         return self.name
 
 class Amenity(models.Model):
-    name = models.CharField(max_length=100, verbose_name="편의시설 이름")
+    name = models.CharField(max_length=100, unique=True, verbose_name="편의시설 이름")
     
     def __str__(self):
         return self.name
