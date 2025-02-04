@@ -12,7 +12,7 @@ export default function Navbar() {
 	};
 
     return (
-		<nav className="bg-opacity-90 shadow-sm fixed top-0 w-full z-50">
+		<nav className="bg-opacity-90 backdrop-blur-lg shadow-sm fixed top-0 w-full z-50">
             <div className="container mx-auto px-4 py-1 flex justify-between items-center">
 			{/* Fiton 로고 */}
 			<Link href="/">
@@ -34,11 +34,11 @@ export default function Navbar() {
 
 
 
-			<ul className="hidden lg:flex space-x-4">
+			<ul className="hidden lg:flex space-x-12">
 				<li><Link href="/instructor" className="hover:text-gray-600">강사</Link></li>
 				<li><Link href="/center" className="hover:text-gray-600">센터찾기</Link></li>
 				<li><Link href="/lesson" className="hover:text-gray-600">수업</Link></li>
-				<li><Link href="#map" className="hover:text-gray-600">지도</Link></li>
+				<li><Link href="/location" className="hover:text-gray-600">지도</Link></li>
 				<li><Link href="#user" className="hover:text-gray-600">인증(내정보/로그아웃/알림)</Link></li>
 				<li><Link href="#login" className="hover:text-gray-600">로그인</Link></li>
 				<li><Link href="#register" className="hover:text-gray-600">회원가입</Link></li>
@@ -46,7 +46,7 @@ export default function Navbar() {
 		</div>
 
 		{isMenuOpen && (
-            <div className="absolute top-full left-0 w-full bg-ghostwhite/80 shadow-sm lg:hidden">
+            <div className="absolute top-full left-0 w-full bg-ghostwhite bg-opacity-90 backdrop-blur-md shadow-sm lg:hidden">
             <ul className="flex flex-col space-y-2 p-4 font-noto">
                 <li>
                 <Link href="/" onClick={toggleMenu} className="hover:text-gray-600">
@@ -64,7 +64,7 @@ export default function Navbar() {
                 </Link>
 				</li>
 				<li>
-                <Link href="#map" onClick={toggleMenu} className="hover:text-gray-600">
+                <Link href="/location" onClick={toggleMenu} className="hover:text-gray-600">
                     지도
                 </Link>
 				</li>

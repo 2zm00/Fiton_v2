@@ -68,4 +68,4 @@ class MembershipSerializer(serializers.ModelSerializer):
 class MembershipOwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = MembershipOwner
-        fields = ['id','price','duration']
+        fields = ['id','start_date','duration']

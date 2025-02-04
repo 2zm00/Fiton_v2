@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={`${notosans.variable} ${poppins.variable}`}>
+    <html lang="ko" className={`${notosans.variable}`}>
       <body>
         <Navbar />
         {children}

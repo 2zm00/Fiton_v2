@@ -17,22 +17,27 @@ def register(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def role_select(request):
-    
     user = request.user
-    role = request.data.get('role')
+    if request.method == 'GET':
+        
+        return Response({"role": user.role})
+      
+    if request.method == 'POST':
+    
+        role = request.data.get('role')
 
-    if not role:
-        return Response({"error": "역할이 필요합니다"}, status=status.HTTP_400_BAD_REQUEST)
-    if role not in ['member', 'instructor', 'centerowner']:
-        return Response({"error": "유효하지 않은 역할입니다."}, status=status.HTTP_400_BAD_REQUEST)
+        if not role:
+            return Response({"error": "역할이 필요합니다"}, status=status.HTTP_400_BAD_REQUEST)
+        if role not in ['member', 'instructor', 'centerowner']:
+            return Response({"error": "유효하지 않은 역할입니다."}, status=status.HTTP_400_BAD_REQUEST)
 
-    user.role = role
-    user.save()
+        user.role = role
+        user.save()
 
-    return Response({"message": "역할이 성공적으로 변경되었습니다.", "role": user.role})
+        return Response({"message": "역할이 성공적으로 변경되었습니다.", "role": user.role})
 
 @api_view(['GET', 'POST', 'PATCH'])
 @permission_classes([IsAuthenticated])
