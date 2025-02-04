@@ -53,9 +53,10 @@ class CenterSerializer(serializers.ModelSerializer):
         return instance
 
 class InstructorApplicationSerializer(serializers.ModelSerializer):
+    instructor = serializers.CharField(source="instructor.user.name", read_only=True)
     class Meta:
         model = InstructorApplication
-        fields = ['id', 'status', 'requested_at']
+        fields = ['id', 'status', 'requested_at','instructor']
         read_only_fields = ['status', 'requested_at']
 
 

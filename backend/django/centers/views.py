@@ -126,6 +126,22 @@ def instructor_application(request,pk):
 def instructor_application_list(request,pk):
     center = Center.objects.get(pk=pk)
     instructor_application = InstructorApplication.objects.filter(center=center)
-    
+
     serializer = InstructorApplicationSerializer(instructor_application, many=True)
     return Response(serializer.data)
+
+@api_view(['PUT'])
+def instructor_application_update(request,pk,status):
+    instructor_application = get_object_or_404(InstructorApplication, pk=pk)
+    serializer = InstructorApplicationSerializer(instructor_application, data=request.data, partial=True)
+    if status == 'approved':
+        instructor=instructor_application.instructor
+        instructor.center.add(instructor_application.center)
+        instructor.save()
+
+    if serializer.is_valid():
+        serializer.save(status=status)
+        return Response(serializer.data)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
