@@ -51,7 +51,7 @@ export default function Navbar() {
 				{status === "authenticated" ? (
 					<>
 					<li className="text-gray-700 font-medium">
-						안녕하세요, {session.user?.name}님!
+						안녕하세요, {session.user.username}님!
 					</li>
 					<li>
 					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
@@ -104,7 +104,7 @@ export default function Navbar() {
 				{status === "authenticated" ? (
 					<>
 					<li className="text-gray-700 font-medium">
-						안녕하세요, {session.user?.name}님!
+						안녕하세요, {session.user.username}님!
 					</li>
 					<li>
 					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">

@@ -18,18 +18,23 @@ export const authOptions = {
             ? "register" 
             : "login";
 
-          const response = await fetch(`http://127.0.0.1:8000/api/${endpoint}/`, {
+          const response = await fetch(`${process.env.NEXTAUTH_URL}/api/${endpoint}/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               username: credentials?.username,
-              password: credentials?.password
+              password: credentials?.password,
             })
           });
 
-          if (!response.ok) throw new Error("Authentication failed");
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Authentication failed");
+          } 
           
-          return await response.json();
+          const user = await response.json();
+          return user;
+          
 
         } catch (error) {
           console.error("Auth error:", error);
@@ -53,6 +58,7 @@ export const authOptions = {
       return session;
     }
   },
+
   secret: process.env.NEXTAUTH_SECRET,
   debug: true // 디버그 모드 활성화
 };
