@@ -9,7 +9,7 @@ class FitonUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FitonUser
-        fields = ('id', 'username', 'password', 'name', 'profile_image', 'gender', 'birth', 'phone_number')
+        fields = ('id', 'username', 'password', 'name', 'profile_image','role', 'gender', 'birth', 'phone_number')
 
     def create(self, validated_data):
         
@@ -24,6 +24,7 @@ class FitonUserSerializer(serializers.ModelSerializer):
         user.gender = validated_data.get('gender', "None")
         user.birth = validated_data.get('birth', None)
         user.phone_number = validated_data.get('phone_number', None)
+        user.role = validated_data.get('role', 'none')
 
         user.save()
         return user
