@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import CenterOwner,Member
+from users.models import CenterOwner,Member,Instructor
 from datetime import datetime
 # Create your models here.
 
@@ -26,6 +26,15 @@ class Center(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.location})"
+
+class InstructorApplication(models.Model):
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='center_requests')
+    center = models.ForeignKey(Center, on_delete=models.CASCADE, related_name='center_requests')
+    status = models.CharField(max_length=10,choices=[('pending', '대기 중'), ('approved', '승인됨'), ('rejected', '거절됨')],default='pending')
+    requested_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.instructor.user.name} → {self.center.name} ({self.status})"
 
 class Membership(models.Model):
     center = models.ForeignKey(Center,on_delete=models.CASCADE,related_name='center_memberships',verbose_name="센터") 

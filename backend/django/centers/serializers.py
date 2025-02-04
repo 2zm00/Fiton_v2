@@ -1,16 +1,6 @@
 from rest_framework import serializers
-from .models import Center,Exercise,Amenity,Membership,MembershipOwner
+from .models import Center,Exercise,Amenity,Membership,MembershipOwner,InstructorApplication
 
-from rest_framework import serializers
-from .models import Center, Exercise, Amenity
-
-from rest_framework import serializers
-from .models import Center, Exercise, Amenity
-
-from rest_framework import serializers
-from .models import Center, Exercise, Amenity
-from rest_framework import serializers
-from .models import Center, Exercise, Amenity
 
 class CenterSerializer(serializers.ModelSerializer):
     exercise = serializers.SerializerMethodField()
@@ -62,6 +52,12 @@ class CenterSerializer(serializers.ModelSerializer):
 
         return instance
 
+class InstructorApplicationSerializer(serializers.ModelSerializer):
+    instructor = serializers.CharField(source="instructor.user.name", read_only=True)
+    class Meta:
+        model = InstructorApplication
+        fields = ['id', 'status', 'requested_at','instructor']
+        read_only_fields = ['status', 'requested_at']
 
 
 class MembershipSerializer(serializers.ModelSerializer):
