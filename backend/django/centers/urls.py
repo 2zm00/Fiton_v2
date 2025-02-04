@@ -9,5 +9,5 @@ urlpatterns = [
     path('center/membership/detail/<int:pk>/',views.membership_detail),
     path('center/<int:pk>/instructor/application/',views.instructor_application),
     path('center/<int:pk>/instructor/application/list/',views.instructor_application_list),
-    path('center/instructor/application/<int:pk>/<str:status>/',views.instructor_application_update)
+    path('center/instructor/application/<int:pk>/',views.instructor_application_update)
 ]

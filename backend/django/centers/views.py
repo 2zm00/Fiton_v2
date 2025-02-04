@@ -129,19 +129,26 @@ def instructor_application_list(request,pk):
 
     serializer = InstructorApplicationSerializer(instructor_application, many=True)
     return Response(serializer.data)
-
-@api_view(['PUT'])
-def instructor_application_update(request,pk,status):
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated]) 
+def instructor_application_update(request, pk):
     instructor_application = get_object_or_404(InstructorApplication, pk=pk)
-    serializer = InstructorApplicationSerializer(instructor_application, data=request.data, partial=True)
-    if status == 'approved':
-        instructor=instructor_application.instructor
-        instructor.center.add(instructor_application.center)
-        instructor.save()
 
+    status = request.data.get("status")
+
+    if status not in ["approved", "rejected"]:
+        return Response({"error": "유효하지 않은 상태 값입니다."}, status=status.HTTP_400_BAD_REQUEST)
+
+    if status == "approved":
+        instructor = instructor_application.instructor
+        if instructor_application.center not in instructor.center.all():
+            instructor.center.add(instructor_application.center)
+            instructor.save()
+
+    serializer = InstructorApplicationSerializer(instructor_application, data=request.data, partial=True)
+    
     if serializer.is_valid():
-        serializer.save(status=status)
-        return Response(serializer.data)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
