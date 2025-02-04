@@ -6,5 +6,6 @@ urlpatterns = [
     path('center/', views.center_list_create, name='center-list-create'),
     path('center/<int:pk>/', views.center_detail_update_delete, name='center-detail-update-delete'),
     path('center/<int:pk>/membership/',views.membership),
-    path('center/membership/detail/<int:pk>/',views.membership_detail)
+    path('center/membership/detail/<int:pk>/',views.membership_detail),
+    path('center/<int:pk>/instructor/application/',views.instructor_application)
 ]
