@@ -112,6 +112,8 @@ def membership_detail(request, pk):
 @permission_classes([IsAuthenticated])
 def instructor_application(request,pk):
     user=request.user
+    if user.role != 'instructor':
+        return Response({'error':'강사가 아닙니다.'}, status=status.HTTP_400_BAD_REQUEST)
     instructor = Instructor.objects.get(user=user)
     center = Center.objects.get(pk=pk)
     serializer = InstructorApplicationSerializer(data=request.data)
@@ -119,3 +121,11 @@ def instructor_application(request,pk):
         serializer.save(instructor=instructor,center=center)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def instructor_application_list(request,pk):
+    center = Center.objects.get(pk=pk)
+    instructor_application = InstructorApplication.objects.filter(center=center)
+    
+    serializer = InstructorApplicationSerializer(instructor_application, many=True)
+    return Response(serializer.data)
