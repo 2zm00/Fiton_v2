@@ -24,12 +24,12 @@ useEffect(() => {
 	// 로그인 상태라면, /api/user/info에 GET 요청을 보내 role_data 확인
 	const fetchUserInfo = async () => {
 	try {
-		const response = await fetch('/api/user/info');
+		const response = await fetch('/api/user/role');
 		if (!response.ok) throw new Error('사용자 정보를 가져오지 못했습니다.');
 		const result = await response.json();
 
 		// role_data가 존재하면 /user/info 로 이동
-		if (result?.role_data) {
+		if (result?.role) {
 		router.push('/user/info');
 		} else {
 		// role_data가 없으면 RoleCheckModal을 표시

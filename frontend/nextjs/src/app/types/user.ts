@@ -36,7 +36,6 @@ export interface UserInfoResponse {
 }
 
 export interface ApiResponse<T = any> {
-  success: boolean;
   data?: T;
   error?: string;
 }

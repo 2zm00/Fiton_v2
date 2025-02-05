@@ -4,12 +4,12 @@ import { NextResponse } from "next/server"
 
 export async function GET(req: Request) {
 try {
-// console.log("=".repeat(50))
-// console.log("User Info GET 요청 시작 시간:", new Date().toISOString())
+console.log("=".repeat(50))
+console.log("User Info GET 요청 시작 시간:", new Date().toISOString())
 
 const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-// console.log("-".repeat(30))
-// console.log("getToken 결과:", JSON.stringify(token, null, 2))
+console.log("-".repeat(30))
+console.log("getToken 결과:", JSON.stringify(token, null, 2))
 
 if (!token) {
 	return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
@@ -45,12 +45,12 @@ return NextResponse.json(
 
 export async function POST(req: Request) {
 try {
-// console.log("=".repeat(50))
-// console.log("User Info POST 요청 시작 시간:", new Date().toISOString())
+console.log("=".repeat(50))
+console.log("User Info POST 요청 시작 시간:", new Date().toISOString())
 
 const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-// console.log("-".repeat(30))
-// console.log("getToken 결과:", JSON.stringify(token, null, 2))
+console.log("-".repeat(30))
+console.log("getToken 결과:", JSON.stringify(token, null, 2))
 
 if (!token) {
 	return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
@@ -61,7 +61,7 @@ if (!token.access) {
 }
 
 const body = await req.json()
-// console.log("Request body:", body)
+console.log("Request body:", body)
 
 const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user/info/`, {
 	method: 'POST',

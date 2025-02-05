@@ -3,15 +3,18 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Role, UserData, RoleData, UserInfoResponse, ApiResponse, InstructorRoleData } from '@/app/types/user';
+import { useSession } from 'next-auth/react';
 
 export default function RoleInfoPage() {
 const params = useParams();
 const role = params.role as Role;
 const router = useRouter();
+const { data: session } = useSession();
 const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 
 const [userData, setUserData] = useState<UserData>({
+	// id는 서버에서 생성
 	id: 0,
 	username: '',
 	name: '',
@@ -44,6 +47,16 @@ const [roleData, setRoleData] = useState<RoleData>(() => {
 		throw new Error('Invalid role');
 	}
 });
+useEffect(() => {
+	if (session && session.user) {
+		setUserData(prev => ({
+		...prev,
+		id: (session.user as any).id || prev.id, // session.user에 id가 있어야 합니다.
+		username: (session.user as any).username || prev.username,
+		name: (session.user as any).name || prev.name,
+		}));
+	}
+	}, [session]);
 
 const handleSubmit = async (e: React.FormEvent) => {
 	e.preventDefault();
@@ -53,11 +66,12 @@ const handleSubmit = async (e: React.FormEvent) => {
 	try {
 	const requestData: UserInfoResponse = {
 		user_data: userData,
-		role_data: roleData,
-		role: role
+		  role_data: roleData,
+		  role: role
 	};
+	console.log('최종 요청 페이로드:', requestData);
 
-	const response = await fetch('/api/user/info', {
+	const response = await fetch('/api/user/info/', {
 		method: 'POST',
 		headers: {
 		'Content-Type': 'application/json',
@@ -67,9 +81,16 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 	const result: ApiResponse<UserInfoResponse> = await response.json();
 
-	if (!result.success || result.error) {
-		throw new Error(result.error || '정보 저장에 실패했습니다.');
-	}
+
+    console.log('서버 응답:', result);
+
+    // 성공 여부를 응답 구조에 맞게 수정
+    if (response.ok && !result.error) {
+      router.push('/user/info');
+    } else {
+      throw new Error(result.error || '정보 저장에 실패했습니다.');
+    }
+
 
 	router.push('/user/info');
 	} catch (err) {
@@ -151,6 +172,20 @@ const renderRoleSpecificFields = () => {
 				rows={4}
 			/>
 			</div>
+			<div>
+				<label className="block text-sm font-medium text-gray-700">
+					평균 별점
+				</label>
+				<input
+                type="number"
+                value={(roleData as InstructorRoleData).rating}
+                onChange={(e) => handleInstructorDataChange('rating', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+				min="0"
+                max="5"
+                step="0.1"
+                />
+			</div>
 		</div>
 		);
 
@@ -214,6 +249,26 @@ return (
 				required
 			/>
 			</div>
+			<div>
+			<label className="block text-sm font-medium text-gray-700">
+			프로필 이미지
+			</label>
+			<input
+			type="file"
+			accept="image/*"
+			onChange={(e) => {
+				const file = e.target.files?.[0];
+				if (file) {
+				// 실제 구현에서는 이미지 업로드 처리
+				setUserData({
+					...userData,
+					profile_image: URL.createObjectURL(file)
+				});
+				}
+			}}
+			className="mt-1 block w-full"
+			/>
+		</div>
 
 			<div>
 			<label className="block text-sm font-medium text-gray-700">
