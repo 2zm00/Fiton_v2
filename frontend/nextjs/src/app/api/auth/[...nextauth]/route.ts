@@ -45,16 +45,28 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
+
+      // console.log("JWT Callback - Before:", { token, user });
+
       if (user) {
-        token.access = user.access;   // Django에서 받은 access 토큰
-        token.refresh = user.refresh; // Django에서 받은 refresh 토큰
+        token.access = user.access;   
+        token.refresh = user.refresh; 
         token.username = user.username;
+        token.role = user.role; 
       }
+
+      // console.log("JWT Callback - After:", { token });
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
+
+      // console.log("Session Callback - Before:", { session, token });
+
       session.accessToken = token.access;
-      session.username = token.username;
+      session.user.username = token.username;
+      session.user.role = token.role;
+
+      // console.log("Session Callback - After:", { session });
       return session;
     }
   },

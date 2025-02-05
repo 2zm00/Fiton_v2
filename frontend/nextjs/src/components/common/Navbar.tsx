@@ -50,9 +50,7 @@ export default function Navbar() {
 				<li><Link href="/location" className="hover:text-gray-600">지도</Link></li>
 				{status === "authenticated" ? (
 					<>
-					<li className="text-gray-700 font-medium">
-						안녕하세요, {session.user.username}님!
-					</li>
+					<Link href="/user" className="hover:text-gray-600">마이페이지</Link>
 					<li>
 					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
 						로그아웃
@@ -103,9 +101,7 @@ export default function Navbar() {
 				</li>
 				{status === "authenticated" ? (
 					<>
-					<li className="text-gray-700 font-medium">
-						안녕하세요, {session.user.username}님!
-					</li>
+					<Link href="/user" className="hover:text-gray-600">마이페이지</Link>
 					<li>
 					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
 						로그아웃
