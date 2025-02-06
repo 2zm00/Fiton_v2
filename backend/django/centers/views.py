@@ -12,11 +12,6 @@ from .serializers import (
     InstructorApplicationSerializer
 )
 
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Center
-from .serializers import CenterSerializer
 
 @api_view(['GET', 'POST'])
 def center_list_create(request):
