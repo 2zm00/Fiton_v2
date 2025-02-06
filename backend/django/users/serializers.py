@@ -32,7 +32,7 @@ class FitonUserSerializer(serializers.ModelSerializer):
         user.gender = validated_data.get('gender', "None")
         user.birth = validated_data.get('birth', None)
         user.phone_number = validated_data.get('phone_number', None)
-        user.role = validated_data.get('role', 'none')
+        user.role = validated_data.get('role', None)
 
         user.save()
         return user

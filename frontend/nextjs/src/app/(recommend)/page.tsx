@@ -17,7 +17,7 @@ export function RecommendInstructor() {
 			{/* 오른쪽 강사1 */}
 			<div className="ml-auto w-1/2 h-full bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
 				<Image
-				src="/images/ins5.png" // 강사1 이미지 경로
+				src="/images/ins14.jpg" // 강사1 이미지 경로
 				alt="강사1"
 				width={200}
 				height={300}
@@ -48,7 +48,7 @@ export function RecommendInstructor() {
 			{/* 강사3 */}
 			<div className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
 				<Image
-				src="/images/ins4.png" // 강사3 이미지 경로
+				src="/images/ins24.jpg" // 강사3 이미지 경로
 				alt="강사3"
 				width={200}
 				height={200}
@@ -61,7 +61,7 @@ export function RecommendInstructor() {
 			{/* 강사4 */}
 			<div className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
 				<Image
-				src="/images/ins2.png" // 강사4 이미지 경로
+				src="/images/ins12.jpg" // 강사4 이미지 경로
 				alt="강사4"
 				width={200}
 				height={200}

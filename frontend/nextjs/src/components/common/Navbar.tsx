@@ -1,15 +1,24 @@
-'use client'
+'use client';
 
-import React, { useState } from "react"
+
+import { useState, useEffect } from 'react';
+import { signOut, useSession } from "next-auth/react";
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Navbar() {
-	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
+
+export default function Navbar() {
+	const { data: session, status } = useSession();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const handleSignOut = async () => {
+		await signOut({ redirect: true, callbackUrl: '/' });
 	};
+	const toggleMenu = () => {
+	setIsMenuOpen(!isMenuOpen);
+	};
+
+
 
     return (
 		<nav className="bg-opacity-90 backdrop-blur-lg shadow-sm fixed top-0 w-full z-50">
@@ -39,17 +48,39 @@ export default function Navbar() {
 				<li><Link href="/center" className="hover:text-gray-600">센터찾기</Link></li>
 				<li><Link href="/lesson" className="hover:text-gray-600">수업</Link></li>
 				<li><Link href="/location" className="hover:text-gray-600">지도</Link></li>
-				<li><Link href="#user" className="hover:text-gray-600">인증(내정보/로그아웃/알림)</Link></li>
-				<li><Link href="#login" className="hover:text-gray-600">로그인</Link></li>
-				<li><Link href="#register" className="hover:text-gray-600">회원가입</Link></li>
-			</ul>
-		</div>
+				{status === "authenticated" ? (
+					<>
+					<Link href="/user" className="hover:text-gray-600">마이페이지</Link>
+					<li>
+					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
+						로그아웃
+					</button>
+					</li>
+					</>
+					) : (
+						<>
+						<li>
+							<Link href="/login" className="hover:text-gray-600">
+								로그인
+							</Link>
+							</li>
+							<li>
+							<Link href="/register" className="hover:text-gray-600">
+								회원가입
+							</Link>
+							</li>
+						</>
+						)}
+					</ul>
+				</div>			
+
+				
 
 		{isMenuOpen && (
             <div className="absolute top-full left-0 w-full bg-ghostwhite bg-opacity-90 backdrop-blur-md shadow-sm lg:hidden">
             <ul className="flex flex-col space-y-2 p-4 font-noto">
                 <li>
-                <Link href="/" onClick={toggleMenu} className="hover:text-gray-600">
+                <Link href="/instructor" onClick={toggleMenu} className="hover:text-gray-600">
                     강사
                 </Link>
 				</li>
@@ -68,23 +99,31 @@ export default function Navbar() {
                     지도
                 </Link>
 				</li>
-				<li>
-                <Link href="#user" onClick={toggleMenu} className="hover:text-gray-600">
-                    인증(내정보/로그아웃/알림)
-                </Link>
-				</li>
-				<li>
-                <Link href="#login" onClick={toggleMenu} className="hover:text-gray-600">
-                    로그인
-                </Link>
-				</li>
-				<li>
-                <Link href="#register" onClick={toggleMenu} className="hover:text-gray-600">
-                    회원가입
-                </Link>
-                </li>
-            </ul>
-            </div>
+				{status === "authenticated" ? (
+					<>
+					<Link href="/user" className="hover:text-gray-600">마이페이지</Link>
+					<li>
+					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
+						로그아웃
+					</button>
+					</li>
+					</>
+					) : (
+						<>
+						<li>
+							<Link href="/login" className="hover:text-gray-600">
+								로그인
+							</Link>
+							</li>
+							<li>
+							<Link href="/register" className="hover:text-gray-600">
+								회원가입
+							</Link>
+							</li>
+						</>
+						)}
+					</ul>
+				</div>			
         )}
     </nav>
 	);
