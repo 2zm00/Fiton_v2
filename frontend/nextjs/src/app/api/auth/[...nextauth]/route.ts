@@ -46,7 +46,7 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, user }: { token: any; user: any }) {
 
-      console.log("JWT Callback - Before:", { token, user });
+      // console.log("JWT Callback - Before:", { token, user });
 
       if (user) {
         token.access = user.access;   
@@ -55,18 +55,18 @@ export const authOptions = {
         token.role = user.role; 
       }
 
-      console.log("JWT Callback - After:", { token });
+      // console.log("JWT Callback - After:", { token });
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
 
-      console.log("Session Callback - Before:", { session, token });
+      // console.log("Session Callback - Before:", { session, token });
 
       session.accessToken = token.access;
       session.user.username = token.username;
       session.user.role = token.role;
 
-      console.log("Session Callback - After:", { session });
+      // console.log("Session Callback - After:", { session });
       return session;
     }
   },
