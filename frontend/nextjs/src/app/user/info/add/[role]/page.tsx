@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Role, UserData, RoleData, UserInfoResponse, ApiResponse, InstructorRoleData } from '@/app/types/user';
+import { Role, UserData } from '@/app/types/user';
 import { useSession } from 'next-auth/react';
 
 export default function RoleInfoPage() {
@@ -13,45 +13,43 @@ const { data: session } = useSession();
 const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 
-const [userData, setUserData] = useState<UserData>({
-	// id는 서버에서 생성
-	id: 0,
+const [userData, setUserData] = useState({
 	username: '',
 	name: '',
-	profile_image: null,
+	profile_image: '',
 	role: role,
 	gender: 'None',
 	birth: '',
-	phone_number: ''
+	phone_number: '',
+	specialties: [],
+	certifications: [],
+    years_of_experience: 0,
+    bio: '',
+	business_registration_number: '',
+	rating: 0
 });
 
-const [roleData, setRoleData] = useState<RoleData>(() => {
-	switch (role) {
-	case 'instructor':
-		return {
-		specialties: [],
-		certifications: [],
-		years_of_experience: 0,
-		bio: '',
-		rating: 0
-		};
-	case 'member':
-		return {
-		bio: ''
-		};
-	case 'centerowner':
-		return {
-		business_registration_number: ''
-		};
-	default:
-		throw new Error('Invalid role');
-	}
-});
+const payload = {
+	role: role,
+	username: userData.username,
+	profile_image: userData.profile_image,
+	name: userData.name,
+	gender: userData.gender,
+	birth: userData.birth,
+	phone_number: userData.phone_number,
+	// userData.specialties가 배열인 경우 문자열로 변환 (콤마로 구분)
+	specialties: userData.specialties.join(", "),
+	years_of_experience: userData.years_of_experience,
+	// userData.certifications가 배열인 경우 문자열로 변환
+	certifications: userData.certifications.join(", "),
+	bio: userData.bio,
+	business_registration_number: userData.business_registration_number,
+};
+
 useEffect(() => {
 	if (session && session.user) {
 		setUserData(prev => ({
 		...prev,
-		id: (session.user as any).id || prev.id, // session.user에 id가 있어야 합니다.
 		username: (session.user as any).username || prev.username,
 		name: (session.user as any).name || prev.name,
 		}));
@@ -63,41 +61,29 @@ const handleSubmit = async (e: React.FormEvent) => {
 	setIsLoading(true);
 	setError(null);
 
-	try {
-	const requestData: UserInfoResponse = {
-		user_data: userData,
-		  role_data: roleData,
-		  role: role
-	};
-	console.log('최종 요청 페이로드:', requestData);
+
+
 
 	const response = await fetch('/api/user/info/', {
 		method: 'POST',
 		headers: {
 		'Content-Type': 'application/json',
 		},
-		body: JSON.stringify(requestData)
+		body: JSON.stringify(payload)
 	});
 
-	const result: ApiResponse<UserInfoResponse> = await response.json();
 
 
-    console.log('서버 응답:', result);
+
 
     // 성공 여부를 응답 구조에 맞게 수정
-    if (response.ok && !result.error) {
+    if (response.ok) 
       router.push('/user/info');
-    } else {
-      throw new Error(result.error || '정보 저장에 실패했습니다.');
-    }
+
 
 
 	router.push('/user/info');
-	} catch (err) {
-	setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
-	} finally {
-	setIsLoading(false);
-	}
+	
 };
 
 const handleUserDataChange = (field: keyof UserData, value: any) => {
@@ -107,9 +93,9 @@ const handleUserDataChange = (field: keyof UserData, value: any) => {
 	}));
 };
 
-const handleInstructorDataChange = (field: keyof InstructorRoleData, value: string) => {
+const handleInstructorDataChange = (field: keyof UserData, value: string) => {
 	if (role === 'instructor') {
-	setRoleData(prev => ({
+	setUserData(prev => ({
 		...prev,
 		[field]: field === 'specialties' || field === 'certifications'
 		? value.split(',').map(item => item.trim())
@@ -132,7 +118,7 @@ const renderRoleSpecificFields = () => {
 			<input
 				type="text"
 				placeholder="쉼표로 구분하여 입력"
-				value={(roleData as InstructorRoleData).specialties.join(', ')}
+				value={userData.specialties.join(', ')}
 				onChange={(e) => handleInstructorDataChange('specialties', e.target.value)}
 				className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
 			/>
@@ -144,7 +130,7 @@ const renderRoleSpecificFields = () => {
 			<input
 				type="text"
 				placeholder="쉼표로 구분하여 입력"
-				value={(roleData as InstructorRoleData).certifications.join(', ')}
+				value={userData.certifications.join(', ')}
 				onChange={(e) => handleInstructorDataChange('certifications', e.target.value)}
 				className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
 			/>
@@ -155,7 +141,7 @@ const renderRoleSpecificFields = () => {
 			</label>
 			<input
 				type="number"
-				value={(roleData as InstructorRoleData).years_of_experience}
+				value={userData.years_of_experience}
 				onChange={(e) => handleInstructorDataChange('years_of_experience', e.target.value)}
 				className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
 				min="0"
@@ -166,25 +152,11 @@ const renderRoleSpecificFields = () => {
 				소개
 			</label>
 			<textarea
-				value={(roleData as InstructorRoleData).bio}
+				value={userData.bio}
 				onChange={(e) => handleInstructorDataChange('bio', e.target.value)}
 				className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
 				rows={4}
 			/>
-			</div>
-			<div>
-				<label className="block text-sm font-medium text-gray-700">
-					평균 별점
-				</label>
-				<input
-                type="number"
-                value={(roleData as InstructorRoleData).rating}
-                onChange={(e) => handleInstructorDataChange('rating', e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-				min="0"
-                max="5"
-                step="0.1"
-                />
 			</div>
 		</div>
 		);
@@ -196,8 +168,8 @@ const renderRoleSpecificFields = () => {
 			소개
 			</label>
 			<textarea
-			value={(roleData as { bio: string }).bio}
-			onChange={(e) => setRoleData({ ...roleData, bio: e.target.value })}
+			value={userData.bio}
+			onChange={(e) => setUserData({ ...userData, bio: e.target.value })}
 			className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
 			rows={4}
 			/>
@@ -212,8 +184,8 @@ const renderRoleSpecificFields = () => {
 			</label>
 			<input
 			type="text"
-			value={(roleData as { business_registration_number: string }).business_registration_number}
-			onChange={(e) => setRoleData({ ...roleData, business_registration_number: e.target.value })}
+			value={userData.business_registration_number}
+			onChange={(e) => setUserData({ ...userData, business_registration_number: e.target.value })}
 			className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
 			/>
 		</div>
