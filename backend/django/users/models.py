@@ -9,7 +9,6 @@ class FitonUser(AbstractUser):
         ('member', '수강생'),
         ('instructor', '강사'),
         ('centerowner', '센터장'),
-        ('none','없음')
     )
     name =models.CharField(max_length=20,null=True, blank=True, verbose_name="이름")
     profile_image = models.ImageField(upload_to='profile_images/',null=True, blank=True, verbose_name="프로필 이미지")

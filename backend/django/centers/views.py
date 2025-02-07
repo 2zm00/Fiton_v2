@@ -12,12 +12,6 @@ from .serializers import (
     InstructorApplicationSerializer
 )
 
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Center
-from .serializers import CenterSerializer
-# 센터장 센터 목록 조회, 생성
 @api_view(['GET', 'POST'])
 def center_list_create(request):
     if request.method == 'GET':

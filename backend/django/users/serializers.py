@@ -1,8 +1,16 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import CenterOwner, Instructor, Member
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 FitonUser = get_user_model()
 
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        # 사용자 정보 추가
+        data['username'] = self.user.username
+
+        return data
 class FitonUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=False)
     password = serializers.CharField(write_only=True,required=False)
@@ -24,7 +32,7 @@ class FitonUserSerializer(serializers.ModelSerializer):
         user.gender = validated_data.get('gender', "None")
         user.birth = validated_data.get('birth', None)
         user.phone_number = validated_data.get('phone_number', None)
-        user.role = validated_data.get('role', 'none')
+        user.role = validated_data.get('role', None)
 
         user.save()
         return user
