@@ -13,7 +13,7 @@ def lesson_create(request):
     user=request.user
     center_name=request.data.get('center')
     center=Center.objects.get(name=center_name)
-    lesson_serializer=LessonSerializer(data=request.date)
+    lesson_serializer=LessonSerializer(data=request.data)
     if lesson_serializer.is_valid():
         lesson_serializer.save(instructor=user.instructor,center=center)
         return Response(lesson_serializer.data, status=status.HTTP_201_CREATED)
@@ -22,6 +22,10 @@ def lesson_create(request):
 @api_view(['GET'])
 def instructor_lesson_list(request):
     instructor_name= request.GET.get('instructor')
+    if instructor_name:
+        pass
+    else:
+        return Response({"error":"강사이름을 입력해주세요"},status=status.HTTP_400_BAD_REQUEST) 
     user=FitonUser.objects.get(name=instructor_name)
     instructor=Instructor.objects.get(user=user)
     lesson_list=Lesson.objects.filter(instructor=instructor)
