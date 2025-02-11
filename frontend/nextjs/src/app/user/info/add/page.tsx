@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Role } from '@/app/types/user';
 
-export default function AddUserInfoPage() {
+export default function AddUserRolePage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,7 +18,6 @@ export default function AddUserInfoPage() {
     setError(null);
 
     try {
-      // 내부 API 호출할 때 절대 경로 사용 (/api/user/role)
       const response = await fetch('/api/user/role', {
         method: 'POST',
         headers: {
@@ -27,15 +26,13 @@ export default function AddUserInfoPage() {
         body: JSON.stringify({ role })
       });
 
-      if (!response.ok) {
-        throw new Error('역할 설정에 실패했습니다.');
+      if (response.ok) {
+        const data = await response.json();
+        console.log("역할 등록 data :", data)
+        if (data.error) {
+          throw new Error(data.error);
+        }
       }
-
-      const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
       // 역할 설정 성공 후 role이 유효하다고 확인되면 이동
       router.push(`/user/info/add/${role}`);
     } catch (err) {

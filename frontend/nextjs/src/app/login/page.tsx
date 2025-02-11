@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn, useSession } from "next-auth/react";
 import LoginCard from '@/components/login/LoginCard';
 
 
@@ -14,22 +13,28 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     
-    const result = await signIn("credentials", {
-      username,
-      password,
-      redirect: false
-    });
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      console.log("로그인 정보: ",response)
 
-    if (result?.error) {
-      setError("로그인 실패! 정보를 확인해주세요.");
-      return;
+
+      if (response.ok) {
+        router.push("/")
+      } else {
+        const data = await response.json();
+        setError(data.error || "로그인에 실패했습니다.");
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again.")
     }
+  }
 
-    // 로그인 성공 후 세션 갱신을 기다림
-    router.refresh();
-    router.push('/');
-  };
 
 
   return (

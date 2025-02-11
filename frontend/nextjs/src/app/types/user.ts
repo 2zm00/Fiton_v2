@@ -16,7 +16,9 @@ export interface UserData {
   rating: number;
 }
 
-
+export interface RoleData {
+  role: string;
+}
 
 export interface ApiResponse<T = any> {
   data?: T;

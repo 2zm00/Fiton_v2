@@ -1,17 +1,42 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { UserData } from '@/app/types/user';
+import { UserData, Role } from '@/app/types/user';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Page() {
-  const [data, setData] = useState<UserData | null>(null);
+  const params = useParams();
+  const role = params.role as Role;
+  const [data, setData] = useState<UserData>({
+    username: '',
+    name: '',
+    profile_image: '',
+    role: role,
+    gender: 'None',
+    birth: '',
+    phone_number: '',
+    specialties: [],
+    certifications: [],
+    years_of_experience: 0,
+    bio: '',
+    business_registration_number: '',
+    rating: 0
+  })
 
 
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/api/user/info');
+      const response = await fetch('/api/user/info', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, "$1")}`,
+        },
+      });
       const result = await response.json();
+      console.log(result);
       setData(result);
     };
     
@@ -51,8 +76,9 @@ export default function Page() {
       <h2>기본 정보</h2>
       <div>
         <p>이름: {data.name}</p>
+        <p>아이디: {data.username}</p>
         <p>성별: 
-          {data.gender === 'Male'? '(남자)' : data.gender === 'Female'? ' (여)' : '(기타)'}
+          {data.gender === 'Male'? '(남자)' : data.gender === 'Female'? ' (여)' : '없음'}
         </p>
         <p>생년월일: {data.birth}</p>
         <p>전화번호: {data.phone_number}</p>
@@ -60,8 +86,10 @@ export default function Page() {
 
       </div>
       <div className='bg-slate-100 shadow-md rounded-lg mt-8 p-6 max-w-md mx-auto'>
-        <h2>역할 정보 ({data.role === 'centerowner'? '(센터장)' : data.role ==='instructor' ? '(강사)' : '회원'})</h2>
+        <h2>역할 정보 {data.role === 'centerowner'? '(센터장)' : data.role ==='instructor' ? '(강사)' : '회원'}</h2>
         <div>{renderRoleData()}</div>
+        <Link href="/user/info/modify">
+        정보 수정하기 </Link>        
         
       </div>
       
