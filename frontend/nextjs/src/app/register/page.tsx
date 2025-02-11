@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn } from "next-auth/react";
 import RegisterCard from '@/components/register/RegisterCard';
 
 
@@ -14,32 +13,38 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const result = await signIn("credentials", {
-      username,
-      password,
-      isRegistering: "true", // 회원가입 플래그
-      redirect: false
-    });
+    setError('');
+  
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      })
+      console.log("회원가입 정보 : ", response)
 
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      router.push('/login'); // 회원가입 성공 시 로그인 페이지로
+      if (response.ok) {
+        router.push("/login") // 회원가입 성공 시 로그인 페이지로
+      } else {
+        const data = await response.json()
+        setError(data.error || "Registration failed. Please try again.")
+      }
+    } catch (error) {
+      setError("An error occurred. Please try again.")
     }
-  };
+  }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center container mx-auto">
-      <form onSubmit={handleSubmit}>
-        <RegisterCard
-          username={username}
-          password={password}
-          onUsernameChange={(e) => setUsername(e.target.value)}
-          onPasswordChange={(e) => setPassword(e.target.value)}
-        />
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-      </form>
-    </div>
-  );
-}
+    return (
+      <div className="min-h-screen flex items-center justify-center container mx-auto">
+        <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+          <RegisterCard
+            username={username}
+            password={password}
+            onUsernameChange={(e) => setUsername(e.target.value)}
+            onPasswordChange={(e) => setPassword(e.target.value)}
+          />
+          {error && <p className="text-red-500 mt-4">{error}</p>}
+        </form>
+      </div>
+    )
+  }

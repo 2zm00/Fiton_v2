@@ -10,11 +10,15 @@ export default function UserRole() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/api/user/role')
-        if (!response.ok) {
-          throw new Error('API request failed')
-        }
+        const response = await fetch(`${process.env.API_URL}/api/user/role`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, "$1")}`,
+          }
+        })
         const result = await response.json()
+        console.log(result)
         setData(result)
         setRole(result.role)
       } catch (err: any) {
@@ -49,7 +53,7 @@ export default function UserRole() {
     <div className="bg-white shadow-md rounded-lg mt-8 p-6 max-w-md mx-auto">
       <h2 className="text-xl font-bold text-gray-800 mb-4">User Role</h2>
       <div className="text-gray-700">
-        {role === null ? (
+        {role === "none" ? (
           <p className="text-yellow-600 font-medium">역할이 없습니다.</p>
         ) : (
           <p className="text-green-600 font-medium">역할: {role}</p>

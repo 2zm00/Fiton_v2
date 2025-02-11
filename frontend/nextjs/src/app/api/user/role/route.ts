@@ -1,96 +1,57 @@
-import { getToken } from "next-auth/jwt"
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-export async function GET(req: Request) {
-	try {
-	console.log("=".repeat(50))
-	console.log("API 요청 시작 시간:", new Date().toISOString())
+export async function GET() {
+	const cookieStore = cookies();
+    const accessToken = (await cookieStore).get("access_token")?.value;
+	const API_URL = process.env.API_URL
 
-	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-	console.log("-".repeat(30))
-	console.log("getToken 결과:", JSON.stringify(token, null, 2))
-	console.log("Username:", token?.username)
-	console.log("역할:", token?.role)
 
-	if (!token) {
-		return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
+    if (!accessToken) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
 
-	if (!token.access) {
-		return NextResponse.json({ error: "Access token not found" }, { status: 401 })
-	}
-
-	console.log("Access Token:", token.access)
-
-	const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user/role/`, {
+	const response = await fetch(`${API_URL}/api/user/role/`,{
 		headers: {
-		'Authorization': `Bearer ${token.access}`
-		}
+            Authorization: `Bearer ${accessToken}`,
+        },
 	})
+	console.log("회원 정보 응답 : ", response)
 
-
-
-	if (!response.ok) {
-		return NextResponse.json(
-		{ error: "API request failed" }, 
-		{ status: response.status }
-		)
-	}
-
-	const data = await response.json()
-	return NextResponse.json(data)
-	} catch (error) {
-	console.error("Error:", error)
-	return NextResponse.json(
-		{ error: "Internal server error" }, 
-		{ status: 500 }
-	)
-	}
-	}
-
-export async function POST(req: Request) {
-	try {
-		console.log("=".repeat(50))
-		console.log("Role POST 요청 시작 시간:", new Date().toISOString())
-	
-		const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-		console.log("-".repeat(30))
-		console.log("getToken 결과:", JSON.stringify(token, null, 2))
-	
-		if (!token) {
-		return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
-		}
-	
-		if (!token.access) {
-		return NextResponse.json({ error: "Access token not found" }, { status: 401 })
-		}
-	
-		const body = await req.json()
-		console.log("Request body:", body)
-	
-		const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user/role/`, {
-		method: 'POST',
-		headers: {
-			'Authorization': `Bearer ${token.access}`,
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(body)
-		})
-	
-		if (!response.ok) {
-		return NextResponse.json(
-			{ error: "API request failed" }, 
-			{ status: response.status }
-		)
-		}
-	
+	if (response.ok) {
 		const data = await response.json()
+		console.log("회원 정보 data : ", data)
 		return NextResponse.json(data)
-	} catch (error) {
-		console.error("Error:", error)
-		return NextResponse.json(
-		{ error: "Internal server error" }, 
-		{ status: 500 }
-		)
+	} else {
+		return NextResponse.json({ error: "회원 정보 data를 불러오는데 실패했습니다." }, { status: response.status })
 	}
+}
+
+export async function POST(request: Request){
+	const cookieStore = cookies();
+    const accessToken = (await cookieStore).get("access_token")?.value;
+    const API_URL = process.env.API_URL
+
+    if (!accessToken) {
+        return NextResponse.json({ error: "회원 역할 POST : Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    console.log("등록할 회원 역할 : ", body)
+
+    const response = await fetch(`${API_URL}/api/user/role/`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(body),
+    })
+
+	if (response.ok) {
+		return NextResponse.json({ success: true })
+		} else {
+            return NextResponse.json({ error: "회원 역할 등록 실패" }, { status: response.status })
+		}
+        
 }

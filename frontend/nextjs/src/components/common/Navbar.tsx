@@ -2,18 +2,50 @@
 
 
 import { useState, useEffect } from 'react';
-import { signOut, useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 
 
 export default function Navbar() {
-	const { data: session, status } = useSession();
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const router = useRouter()
+
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+	useEffect(() => {
+		// Check if user is logged in
+		const checkLoginStatus = async () => {
+		try {
+			const response = await fetch("/api/user/role")
+			if (response.ok) {
+			setIsLoggedIn(true)
+			} else {
+			setIsLoggedIn(false)
+			}
+		} catch (error) {
+			console.error("Error checking login status:", error)
+			setIsLoggedIn(false)
+		}
+	}
+	checkLoginStatus()
+	}, [])
+
 	const handleSignOut = async () => {
-		await signOut({ redirect: true, callbackUrl: '/' });
-	};
+		try {
+		const response = await fetch("/api/logout", {
+			method: "POST",
+		})
+		if (response.ok) {
+			setIsLoggedIn(false)
+			router.push("/login")
+		}
+		} catch (error) {
+		console.error("Error signing out:", error)
+		}
+	}
+
 	const toggleMenu = () => {
 	setIsMenuOpen(!isMenuOpen);
 	};
@@ -48,9 +80,9 @@ export default function Navbar() {
 				<li><Link href="/center" className="hover:text-gray-600">센터찾기</Link></li>
 				<li><Link href="/lesson" className="hover:text-gray-600">수업</Link></li>
 				<li><Link href="/location" className="hover:text-gray-600">지도</Link></li>
-				{status === "authenticated" ? (
+				{isLoggedIn ? (
 					<>
-					<Link href="/user" className="hover:text-gray-600">마이페이지</Link>
+					<Link href="/user/info" className="hover:text-gray-600">마이페이지</Link>
 					<li>
 					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
 						로그아웃
@@ -99,9 +131,9 @@ export default function Navbar() {
                     지도
                 </Link>
 				</li>
-				{status === "authenticated" ? (
+				{isLoggedIn ? (
 					<>
-					<Link href="/user" className="hover:text-gray-600">마이페이지</Link>
+					<Link href="/user/info" className="hover:text-gray-600">마이페이지</Link>
 					<li>
 					<button onClick={handleSignOut} className="text-red-500 hover:text-red-600">
 						로그아웃

@@ -1,91 +1,87 @@
-// app/api/user/info/route.ts
-import { getToken } from "next-auth/jwt"
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
-export async function GET(req: Request) {
-try {
-console.log("=".repeat(50))
-console.log("User Info GET 요청 시작 시간:", new Date().toISOString())
+export async function GET() {
+	const cookieStore = cookies();
+    const accessToken = (await cookieStore).get("access_token")?.value;
+	const API_URL = process.env.API_URL
 
-const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-console.log("-".repeat(30))
-console.log("getToken 결과:", JSON.stringify(token, null, 2))
 
-if (!token) {
-	return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
-}
 
-if (!token.access) {
-	return NextResponse.json({ error: "Access token not found" }, { status: 401 })
-}
-
-const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user/info/`, {
-	headers: {
-	'Authorization': `Bearer ${token.access}`
+    if (!accessToken) {
+		return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 	}
-})
 
-if (!response.ok) {
-	return NextResponse.json(
-	{ error: "API request failed" }, 
-	{ status: response.status }
-	)
+	const response = await fetch(`${API_URL}/api/user/info/`,{
+		headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+	})
+	// console.log("회원 정보 응답 : ", response)
+
+	if (response.ok) {
+		const { user_data, role_data } = await response.json();
+		console.log("회원 정보 data : ",{ ...user_data, ...role_data })
+		return NextResponse.json({ ...user_data, ...role_data })
+	} else {
+		return NextResponse.json({ error: "회원 정보 data를 불러오는데 실패했습니다." }, { status: response.status })
+	}
 }
 
-const data = await response.json()
-return NextResponse.json(data)
-} catch (error) {
-console.error("Error:", error)
-return NextResponse.json(
-	{ error: "Internal server error" }, 
-	{ status: 500 }
-)
-}
-}
+export async function POST(request: Request){
+	const cookieStore = cookies();
+    const accessToken = (await cookieStore).get("access_token")?.value;
+    const API_URL = process.env.API_URL
 
-export async function POST(req: Request) {
-try {
-console.log("=".repeat(50))
-console.log("User Info POST 요청 시작 시간:", new Date().toISOString())
+    if (!accessToken) {
+        return NextResponse.json({ error: "회원정보 POST : Unauthorized" }, { status: 401 });
+    }
 
-const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-console.log("-".repeat(30))
-console.log("getToken 결과:", JSON.stringify(token, null, 2))
+    const body = await request.json();
+    console.log("등록할 회원 정보 : ", body)
 
-if (!token) {
-	return NextResponse.json({ error: "Not authenticated" }, { status: 401 })
-}
+    const response = await fetch(`${API_URL}/api/user/info/`,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(body),
+    })
 
-if (!token.access) {
-	return NextResponse.json({ error: "Access token not found" }, { status: 401 })
-}
-
-const body = await req.json()
-console.log("Request body:", body)
-
-const response = await fetch(`${process.env.NEXTAUTH_URL}/api/user/info/`, {
-	method: 'POST',
-	headers: {
-	'Authorization': `Bearer ${token.access}`,
-	'Content-Type': 'application/json'
-	},
-	body: JSON.stringify(body)
-})
-
-if (!response.ok) {
-	return NextResponse.json(
-	{ error: "API request failed" }, 
-	{ status: response.status }
-	)
+	if (response.ok) {
+		return NextResponse.json({ success: true })
+		} else {
+            return NextResponse.json({ error: "회원 정보 등록 실패" }, { status: response.status })
+		}
+        
 }
 
-const data = await response.json()
-return NextResponse.json(data)
-} catch (error) {
-console.error("Error:", error)
-return NextResponse.json(
-	{ error: "Internal server error" }, 
-	{ status: 500 }
-)
-}
+export async function PATCH(request: Request){
+	const cookieStore = cookies();
+    const accessToken = (await cookieStore).get("access_token")?.value;
+    const API_URL = process.env.API_URL
+
+    if (!accessToken) {
+        return NextResponse.json({ error: "회원정보 POST : Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    console.log("등록할 회원 정보 : ", body)
+
+    const response = await fetch(`${API_URL}/api/user/info/`,{
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(body),
+    })
+
+	if (response.ok) {
+		return NextResponse.json({ success: true })
+		} else {
+            return NextResponse.json({ error: "회원 정보 등록 실패" }, { status: response.status })
+		}
+        
 }

@@ -3,13 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Role, UserData } from '@/app/types/user';
-import { useSession } from 'next-auth/react';
+
 
 export default function RoleInfoPage() {
 const params = useParams();
 const role = params.role as Role;
 const router = useRouter();
-const { data: session } = useSession();
 const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +17,7 @@ const [userData, setUserData] = useState({
 	name: '',
 	profile_image: '',
 	role: role,
-	gender: 'None',
+	gender: '',
 	birth: '',
 	phone_number: '',
 	specialties: [],
@@ -46,15 +45,7 @@ const payload = {
 	business_registration_number: userData.business_registration_number,
 };
 
-useEffect(() => {
-	if (session && session.user) {
-		setUserData(prev => ({
-		...prev,
-		username: (session.user as any).username || prev.username,
-		name: (session.user as any).name || prev.name,
-		}));
-	}
-	}, [session]);
+
 
 const handleSubmit = async (e: React.FormEvent) => {
 	e.preventDefault();
