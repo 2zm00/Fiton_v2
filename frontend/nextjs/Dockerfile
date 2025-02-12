@@ -3,7 +3,7 @@ WORKDIR /app
 
 # 의존성 파일 복사 및 설치
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --production=false
 
 # 소스 코드 복사
 COPY . .
@@ -19,6 +19,6 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 EXPOSE 3000
 
-# 환경변수로 개발/프로덕션 모드 구분
+
 ENV PATH /app/node_modules/.bin:$PATH
-CMD ["yarn", "start"]
+CMD ["next", "start"]
