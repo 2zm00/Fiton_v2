@@ -1,6 +1,5 @@
 
 import { cookies } from "next/headers"
-import { getToken } from "next-auth/jwt"
 import { NextResponse } from "next/server"
 
 
