@@ -1,7 +1,7 @@
 # Stage 1: Base (공통 의존성)
 FROM node:18-alpine AS base
 WORKDIR /app
-COPY package.json yarn.lock 
+COPY package.json yarn.lock ./
 
 # Stage 2: 개발 환경
 FROM base AS dev
@@ -11,7 +11,7 @@ CMD ["yarn", "dev", "-H", "0.0.0.0"]
 
 # Stage 3: 빌더
 FROM base AS builder
-RUN yarn install --frozen-lockfile --production
+RUN yarn install --frozen-lockfile 
 COPY . .
 RUN yarn build
 
