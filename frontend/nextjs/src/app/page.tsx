@@ -4,7 +4,7 @@ import React from "react"
 import Location from "@/app/location/page";
 import Search from "@/app/search/page";
 import Banner from "@/components/common/Banner";
-import { RecommendInstructor, RecommendLesson } from "./(recommend)/page";
+import { RecommendInstructor, RecommendLesson } from "./recommend/page";
 
 export default function Home() {
     return (
