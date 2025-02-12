@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework import status
 from .models import Exercise, Amenity, Center, Membership, MembershipOwner,InstructorApplication
 from users.models import Instructor
@@ -51,7 +50,6 @@ def center_detail_update_delete(request):
 
 # 센터장 회원권 목록 조회, 생성
 @api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
 def membership(request):
     if request.method == 'GET':
         memberships = Membership.objects.filter(center=request.data.get('center_id'))
@@ -82,7 +80,6 @@ def membership_detail(request, pk):
 
 # 강사 센터 신청 및 신청 취소
 @api_view(['POST','DELETE'])
-@permission_classes([IsAuthenticated])
 def instructor_application(request):
     instructor = get_object_or_404(Instructor, user=request.user)
     center = get_object_or_404(Center, id=request.data.get('center_id'))
@@ -109,7 +106,6 @@ def instructor_application(request):
 
 # 센터장 강사 신청 목록 조회
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def instructor_application_list(request):
     center = Center.objects.get(pk=request.data.get('center_id'))
     instructor_application = InstructorApplication.objects.filter(center=center)
@@ -119,7 +115,6 @@ def instructor_application_list(request):
 
 # 센터장 강사 신청 상태 변경
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated]) 
 def instructor_application_update(request):
     instructor_application = get_object_or_404(InstructorApplication, pk=request.data.get('instructor_application_id'))
 
@@ -144,7 +139,6 @@ def instructor_application_update(request):
     
 # 강사 센터목록 조회
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def instructor_center_list(request):
     instructor=Instructor.objects.get(user=request.user)
     center_list=instructor.center.all()
