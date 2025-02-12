@@ -1,26 +1,24 @@
-version: '3.8'
-
 services:
   next-dev:
     build:
-      context: ./frontend/nextjs  # 중요: nextjs 폴더 경로
+      context: .  # 현재 디렉토리(frontend/nextjs) 기준
       dockerfile: Dockerfile
       target: dev
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/nextjs:/app
+      - .:/app       # 현재 폴더 전체 매핑
       - /app/node_modules
     env_file:
-      - ./frontend/nextjs/.env.local
+      - .env.local   # 현재 폴더의 파일 직접 지정
 
   next-prod:
     build:
-      context: ./frontend/nextjs
+      context: .
       dockerfile: Dockerfile
       target: prod
     ports:
       - "3000:3000"
     env_file:
-      - ./frontend/nextjs/.env.production
+      - .env.production
     restart: unless-stopped
