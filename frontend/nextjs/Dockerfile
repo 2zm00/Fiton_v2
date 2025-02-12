@@ -1,7 +1,7 @@
 # Stage 1: Base (공통 의존성)
 FROM node:18-alpine AS base
 WORKDIR /app
-COPY package.json yarn.lock .yarnrc.yml ./
+COPY package.json yarn.lock 
 
 # Stage 2: 개발 환경
 FROM base AS dev
