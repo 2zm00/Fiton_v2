@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  next-dev:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/.next
+    env_file:
+      - .env.local
+    environment:
+      - NODE_ENV=development
+
+  next-prod:
+    build:
+      context: .
+      target: prod
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true

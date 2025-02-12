@@ -1,7 +1,7 @@
 'use client';
 
 import { CenterData } from "@/app/types/center";
-import { useScroll } from "framer-motion";
+import { useRouter } from "next/navigation"; 
 import { useEffect, useState } from "react";
 
 
@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 
 
 export default function CenterList() {
+	const router = useRouter();
 	// 타입에 담기, 이중딕셔너리니까 리스트형태로 한 겹 빼고 담음.
 	const [centerData, setCenterData ] = useState<CenterData[]>([]);
 
@@ -28,7 +29,10 @@ export default function CenterList() {
 	fetchData();
 	}, []);
 
-	// 담은 타입으로 센터 카드 간략하게 보여주기
+	// 센터카드 클릭 시 라우팅
+	const handleCardClick = (id: number) => {
+		router.push(`/center/${id}`);
+	};
 
 
 
@@ -36,10 +40,12 @@ export default function CenterList() {
 		<div className="container mx-auto px-4 py-8">
 		<h1 className="text-3xl font-bold text-gray-800 mb-8">센터 목록</h1>
 		
-		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+		<button 
+		className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			{centerData.map((center) => (
 			<div
 				key={center.id}
+				onClick={() => handleCardClick(center.id)}
 				className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
 			>
 				<div className="p-6 space-y-4">
@@ -100,7 +106,7 @@ export default function CenterList() {
 				</div>
 			</div>
 			))}
-		</div>
+		</button>
 		</div>
 	);
 	}
