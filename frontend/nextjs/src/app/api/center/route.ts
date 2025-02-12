@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
 
 export async function PUT(req: Request) {
-	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+	const token = await fetch({ req, secret: process.env.NEXTAUTH_SECRET })
 
 	if (!token) {
 		return NextResponse.json({ error: "center를 위한 token이 전달되지 않았습니다." }, { status: 401 })
