@@ -17,9 +17,9 @@ RUN yarn build
 
 # Stage 4: 프로덕션
 FROM node:18-alpine AS prod
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
-USER 1000
 EXPOSE 3000
 CMD ["yarn", "start"]

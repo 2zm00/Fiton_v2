@@ -1,24 +1,23 @@
 services:
-  next-dev:
-    build:
-      context: .  # 현재 디렉토리(frontend/nextjs) 기준
-      dockerfile: Dockerfile
-      target: dev
-    ports:
-      - "3000:3000"
+  nextjs:
+    build: .
+    environment:
+      - NODE_ENV=production
     volumes:
-      - .:/app       # 현재 폴더 전체 매핑
-      - /app/node_modules
-    env_file:
-      - .env.local   # 현재 폴더의 파일 직접 지정
+      - .:/app
+    networks:
+      - next-network
 
-  next-prod:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: prod
+  nginx:
+    build: ./nginx
     ports:
-      - "3000:3000"
-    env_file:
-      - .env.production
-    restart: unless-stopped
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - nextjs
+    networks:
+      - next-network
+
+networks:
+  next-network:
+    driver: bridge
