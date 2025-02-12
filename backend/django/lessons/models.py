@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from users.models import Instructor ,Member
 from centers.models import Center,Exercise
+from datetime import timedelta
 
 # 수업 모델 
 class Lesson(models.Model):
@@ -21,6 +22,12 @@ class Lesson_schedule(models.Model):
     reservation_permission = models.DateTimeField(verbose_name="예약 가능 시간", null=True, blank=True)
     cancellation_permission = models.DateTimeField(verbose_name="예약 취소 날짜", null=True,blank=True)
     max_member = models.IntegerField(verbose_name="최대 인원")
+    def save(self, *args, **kwargs):
+        if not self.reservation_permission:
+            self.reservation_permission = self.start_lesson - timedelta(days=7)
+        if not self.cancellation_permission:
+            self.cancellation_permission = self.start_lesson - timedelta(days=1)
+        super().save(*args, **kwargs)
     def __str__(self):
         return f"{self.lesson.name} ({self.start_lesson.strftime('%Y년 %m월 %d일 %H시 %M분')})"
         
