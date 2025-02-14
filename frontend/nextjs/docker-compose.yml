@@ -1,0 +1,26 @@
+services:
+  nextjs:
+    build: .
+    ports:
+      -"3000:3000"
+    environment:
+      - API_URL=${API_URL}
+      - NODE_ENV=production
+    volumes:
+      - .:/app
+    networks:
+      - next-network
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - nextjs
+    networks:
+      - next-network
+
+networks:
+  next-network:
+    driver: bridge
