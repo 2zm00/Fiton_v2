@@ -79,7 +79,7 @@ export default function Navbar() {
 				<li><Link href="/instructor" className="hover:text-gray-600">강사</Link></li>
 				<li><Link href="/center" className="hover:text-gray-600">센터찾기</Link></li>
 				<li><Link href="/lesson" className="hover:text-gray-600">수업</Link></li>
-				<li><Link href="/location" className="hover:text-gray-600">지도</Link></li>
+				<li><Link href="/analyze" className="hover:text-gray-600">분석</Link></li>
 				{isLoggedIn ? (
 					<>
 					<Link href="/user/info" className="hover:text-gray-600">마이페이지</Link>
@@ -127,8 +127,8 @@ export default function Navbar() {
                 </Link>
 				</li>
 				<li>
-                <Link href="/location" onClick={toggleMenu} className="hover:text-gray-600">
-                    지도
+                <Link href="/analyze" onClick={toggleMenu} className="hover:text-gray-600">
+                    분석
                 </Link>
 				</li>
 				{isLoggedIn ? (
