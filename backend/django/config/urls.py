@@ -28,4 +28,6 @@ urlpatterns = [
     path('api/', include('lessons.urls')),
     path('api/login/', CustomTokenObtainPairView.as_view()),
     path('api/login/refresh/', TokenRefreshView.as_view()),
+    path('api/', include('reviews.urls')),
+
 ]
