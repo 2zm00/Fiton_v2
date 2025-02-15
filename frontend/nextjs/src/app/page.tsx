@@ -20,7 +20,7 @@ export default function Home() {
       </h1>
       <p
         
-        className="text-lg text-gray-600 mt-4 mb-8"
+        className="text-lg text-gray-600 mt-4 "
       >
         당신의 활력을 위한 최고의 선택
       </p>
