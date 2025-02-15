@@ -13,8 +13,6 @@ services:
       - NEXT_PUBLIC_MINIO_PORT=${NEXT_PUBLIC_MINIO_PORT}
       - NEXT_PUBLIC_MINIO_BUCKET_NAME=${NEXT_PUBLIC_MINIO_BUCKET_NAME}
       - NODE_ENV=production
-    volumes:
-      - .:/app
     networks:
       - next-network
 
