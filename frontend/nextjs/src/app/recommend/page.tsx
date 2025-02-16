@@ -1,5 +1,6 @@
 'use client';
 
+import { MINIO_URL } from "@/lib/config";
 import Image from "next/image";
 export function RecommendInstructor() {
 	return (
@@ -16,12 +17,13 @@ export function RecommendInstructor() {
 
 			{/* 오른쪽 강사1 */}
 			<div className="ml-auto w-1/2 h-full bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-				<Image
-				src="/images/ins14.jpg" // 강사1 이미지 경로
+				<img
+				src={`${MINIO_URL}/nextjs/instructor/profile/ins1.jpg`} // 강사1 이미지 경로
 				alt="강사1"
 				width={200}
 				height={300}
 				className="w-full h-[300px] object-cover rounded-lg mb-4"
+				loading="lazy"
 				/>
 				<h3 className="text-xl font-bold">강사1</h3>
 				<p className="text-gray-600 mt-2 text-center">
@@ -34,12 +36,13 @@ export function RecommendInstructor() {
 			<div className="grid grid-cols-3 gap-4 mt-8">
 			{/* 강사2 */}
 			<div className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-				<Image
-				src="/images/ins3.png" // 강사2 이미지 경로
+				<img
+				src={`${MINIO_URL}/nextjs/instructor/profile/ins6.jpg`} // 강사2 이미지 경로
 				alt="강사2"
 				width={200}
 				height={200}
 				className="w-full h-[200px] object-cover rounded-lg mb-4"
+				loading="lazy"
 				/>
 				<h3 className="text-lg font-bold">강사2</h3>
 				<p className="text-gray-600 mt-2 text-center">건강한 운동을 위한 전문가.</p>
@@ -47,12 +50,13 @@ export function RecommendInstructor() {
 
 			{/* 강사3 */}
 			<div className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-				<Image
-				src="/images/ins24.jpg" // 강사3 이미지 경로
+				<img
+				src={`${MINIO_URL}/nextjs/instructor/profile/ins4.jpg`} // 강사3 이미지 경로
 				alt="강사3"
 				width={200}
 				height={200}
 				className="w-full h-[200px] object-cover rounded-lg mb-4"
+				loading="lazy"
 				/>
 				<h3 className="text-lg font-bold">강사3</h3>
 				<p className="text-gray-600 mt-2 text-center">체계적인 트레이닝 제공.</p>
@@ -60,12 +64,13 @@ export function RecommendInstructor() {
 
 			{/* 강사4 */}
 			<div className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
-				<Image
-				src="/images/ins12.jpg" // 강사4 이미지 경로
+				<img
+				src={`${MINIO_URL}/nextjs/instructor/profile/ins12.jpg`} // 강사4 이미지 경로
 				alt="강사4"
 				width={200}
 				height={200}
 				className="w-full h-[200px] object-cover rounded-lg mb-4"
+				loading="lazy"
 				/>
 				<h3 className="text-lg font-bold">강사4</h3>
 				<p className="text-gray-600 mt-2 text-center">운동의 즐거움을 선물합니다.</p>

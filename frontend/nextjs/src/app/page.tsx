@@ -8,6 +8,9 @@ import { RecommendInstructor, RecommendLesson } from "./recommend/page";
 
 export default function Home() {
     return (
+      <div className="min-h-screen">
+      {/* 배너 섹션
+      <Banner /> */}
       <div className="container mx-auto px-4 py-8">
         <h1
         
@@ -17,14 +20,15 @@ export default function Home() {
       </h1>
       <p
         
-        className="text-lg text-gray-600 mt-4 mb-8"
+        className="text-lg text-gray-600 mt-4 "
       >
         당신의 활력을 위한 최고의 선택
       </p>
-      
-      {/* 배너 */}
-      <Banner />
+      </div>
 
+      {/* 배너 섹션 */}
+      <Banner />
+      <div className="container mx-auto px-4 py-8">
       {/* 추천 메뉴: 추천 강사 */}
       <RecommendInstructor />
 
@@ -37,6 +41,7 @@ export default function Home() {
       {/* 위치 정보 */}
       <Location />
       
+    </div>
     </div>
   );
 };
