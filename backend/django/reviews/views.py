@@ -28,7 +28,7 @@ def review_list(request):
             return Response({"error": "해당 수업을 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
 
         # 사용자가 해당 수업을 수강했는지 확인
-        if not CompletedLesson.objects.filter(member= user.member , lesson_schedule = lesson.lesson_schedules ):
+        if not CompletedLesson.objects.filter(member= user.member , lesson_schedule = lesson.lesson_schedules).exists():
             return Response({"error": "이 수업을 수강한 적이 없습니다."}, status=status.HTTP_403_FORBIDDEN)
 
         # 리뷰 생성
@@ -94,18 +94,3 @@ def review_detail(request, pk):
 
         return Response({"message": "리뷰가 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
 
-@app.post("/analyze-video")
-async def analyze_video(file: UploadFile = File(...)):
-    try:
-        # 임시 파일로 영상 저장
-        with tempfile.NamedTemporaryFile(delete=False) as temp:
-            temp.write(await file.read())
-            video_path = temp.name
-        
-        # 분석 결과 시각화
-        output_path = "output.mp4"
-        annotate_video(video_path, output_path)
-        
-        return JSONResponse(content={"result": "Video processed successfully", "output_path": output_path})
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
