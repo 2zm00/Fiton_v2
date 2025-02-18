@@ -51,7 +51,7 @@ export function RecommendInstructor() {
 			{/* 강사3 */}
 			<div className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
 				<img
-				src={`${MINIO_URL}/nextjs/instructor/profile/ins4.jpg`} // 강사3 이미지 경로
+				src={`${MINIO_URL}/nextjs/instructor/profile/ins21.jpg`} // 강사3 이미지 경로
 				alt="강사3"
 				width={200}
 				height={200}

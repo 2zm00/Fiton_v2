@@ -5,6 +5,7 @@ import Location from "@/app/location/page";
 import Search from "@/app/search/page";
 import Banner from "@/components/common/Banner";
 import { RecommendInstructor, RecommendLesson } from "./recommend/page";
+import ChatBot from "@/components/chatbot/ChatBot";
 
 export default function Home() {
     return (
@@ -40,6 +41,8 @@ export default function Home() {
 
       {/* 위치 정보 */}
       <Location />
+
+      <ChatBot />
       
     </div>
     </div>
