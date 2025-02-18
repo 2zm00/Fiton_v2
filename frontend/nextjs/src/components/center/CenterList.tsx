@@ -24,7 +24,7 @@ export default function CenterList() {
 			});
 			const result = await response.json();
 	console.log(result);
-	setCenterData(result);
+	setCenterData(Array.isArray(result) ? result : []);
 	};
 	fetchData();
 	}, []);
@@ -40,14 +40,14 @@ export default function CenterList() {
 		<div className="container mx-auto px-4 py-8">
 		<h1 className="text-3xl font-bold text-gray-800 mb-8">센터 목록</h1>
 		
-		<button 
-		className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-			{centerData.map((center) => (
-			<div
-				key={center.id}
-				onClick={() => handleCardClick(center.id)}
-				className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-			>
+		<button className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+			{centerData.length > 0 ? (
+				centerData.map((center) => (
+					<div
+						key={center.id}
+						onClick={() => handleCardClick(center.id)}
+						className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+					>
 				<div className="p-6 space-y-4">
 				{/* 헤더 섹션 */}
 				<div className="flex items-start justify-between">
@@ -105,7 +105,9 @@ export default function CenterList() {
 				</div>
 				</div>
 			</div>
-			))}
+			)) ): (<div className="col-span-full text-center text-gray-500">
+				등록된 센터가 없습니다.
+			</div>)}
 		</button>
 		</div>
 	);

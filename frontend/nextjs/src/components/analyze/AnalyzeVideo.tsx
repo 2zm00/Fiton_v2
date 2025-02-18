@@ -19,7 +19,10 @@ export default function AnalyzeVideo() {
 			if (!res.ok) throw new Error('영상 조회 실패');
 			
 			const data = await res.json();
+			console.log('받은 데이터:', data); // 응답 데이터 확인
+            console.log('video_url:', data.video_url);
 			setVideoUrl(data.video_url);
+			console.log('설정된 videoUrl:', data.video_url);
 			setError(null);
 		} catch (err) {
 			setError(err instanceof Error ? err.message : '알 수 없는 오류');
@@ -51,16 +54,19 @@ export default function AnalyzeVideo() {
 			{error && <div className="text-red-500 mb-4">{error}</div>}
 	
 			{videoUrl && (
-			<div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-				<video
-				controls
-				src={videoUrl}
-				className="w-full h-full object-cover"
-				>
-				브라우저가 비디오를 지원하지 않습니다.
-				</video>
-			</div>
-			)}
+				<div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+					<video
+					controls
+					playsInline
+					preload="metadata"
+					crossOrigin="anonymous"
+					className="w-full h-full object-cover"
+					>
+					<source src={videoUrl} type="video/mp4" />
+					브라우저가 비디오를 지원하지 않습니다.
+					</video>
+				</div>
+				)}
 		</div>
 		);
 	}
