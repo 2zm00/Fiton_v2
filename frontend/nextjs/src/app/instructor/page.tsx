@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { MINIO_URL } from "@/lib/config";
 import InstructorProfile from '@/components/instructor/InstructorProfile';
 
 export default function InstructorListPage() {
@@ -8,25 +9,25 @@ export default function InstructorListPage() {
 	const instructors = [
 	{
 		id: 1,
-		image: '/images/ins1.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins10.jpg`,
 		name: '강사 A',
 		description: '전문적인 트레이닝과 활력을 주는 최고의 강사입니다.',
 	},
 	{
 		id: 2,
-		image: '/images/ins29.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins20.jpg`,
 		name: '강사 B',
 		description: '체계적인 운동 프로그램을 제공합니다.',
 	},
 	{
 		id: 3,
-		image: '/images/ins12.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins12.jpg`,
 		name: '강사 C',
 		description: '건강한 라이프스타일을 선물합니다.',
 	},
 	{
 		id: 4,
-		image: '/images/ins14.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins21.jpg`,
 		name: '강사 D',
 		description: '운동의 즐거움을 가르치는 전문가입니다.',
 	},

@@ -1,61 +1,33 @@
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
 
+const schema = z.object({
+  question: z.string().min(1).max(500)
+});
 
+export async function POST(req: Request) {
+  try {
+    const json = await req.json();
+    const { question } = schema.parse(json);
+    
+    const encodedQuestion = encodeURIComponent(question);
+    const fastapiRes = await fetch(
+      `${process.env.NEXT_PUBLIC_FAST_API_URL}/api/chat/?question=${encodedQuestion}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
 
-export async function GET(request: Request) {
-	const cookieStore = cookies();
-	const accessToken = (await cookieStore).get("access_token")?.value;
-	const API_URL = process.env.API_URL
+    if (!fastapiRes.ok) throw new Error('백엔드 연결 실패');
+    const { answer } = await fastapiRes.json();
 
-
-	const response = await fetch(`${API_URL}/chat/`, {
-		headers: {
-			'Authorization': `Bearer ${accessToken}`
-		}
-	})
-
-	if (response.ok) {
-		const data = await response.json();
-		console.log("전체 센터 리스트", data);
-		return NextResponse.json(data);
-	} else {
-		return NextResponse.json({ error: "Failed to fetch center list" }, { status: response.status })
-	}
-
-	const data = await response.json()
-	return NextResponse.json(data)
-	
-}
-
-
-
-export async function POST(request: Request) {
-	const cookieStore = cookies()
-	const accessToken = (await cookieStore).get("access_token")?.value;
-	const API_URL = process.env.API_URL;
-	console.log("TOKEN : ", accessToken);
-	
-	if (!accessToken) {
-		return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
-	};
-
-	const body = await request.json();
-	console.log("POST 요청 body :", body)
-
-	const response = await fetch(`${API_URL}/chat/`, {
-		method: 'POST',
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${accessToken}`,
-		},
-		body: JSON.stringify(body)
-	})
-	console.log("POST 요청 response :", response);
-
-	if (response.ok) {
-		return NextResponse.json({ success: true })
-	} else {
-	return NextResponse.json({ error: "Failed to add center info" }, { status: response.status })
-	}
+    return NextResponse.json({ answer });
+    
+  } catch (error) {
+    return NextResponse.json(
+      { error: '처리 중 오류 발생' },
+      { status: 500 }
+    );
+  }
 }

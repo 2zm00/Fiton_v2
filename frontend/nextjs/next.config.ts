@@ -16,6 +16,11 @@ const nextConfig: NextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true, // 타입 오류 시 빌드 차단
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '100mb' 
+    }
   }
 };
 

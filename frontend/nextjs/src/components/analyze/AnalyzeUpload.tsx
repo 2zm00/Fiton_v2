@@ -7,7 +7,7 @@ export default function AnalyzeUpload() {
 	const [videoUrl, setVideoUrl] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const API_URL = process.env.API_URL;
+	const FAST_API_URL = process.env.NEXT_PUBLIC_FAST_API_URL;
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
@@ -27,7 +27,7 @@ export default function AnalyzeUpload() {
 		formData.append('file', file);
 
 		try {
-		const response = await fetch(`http://${API_URL}/api/analyze`, {
+		const response = await fetch(`${FAST_API_URL}/api/analyze`, {
 			method: 'POST',
 			body: formData,
 		});

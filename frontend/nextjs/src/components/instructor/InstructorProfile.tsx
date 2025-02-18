@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+
 
 interface InstructorProfileProps {
   image: string; // 강사 이미지 경로
@@ -17,7 +17,7 @@ export default function InstructorProfile({
 	return (
 	<div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
 		{/* 강사 이미지 */}
-		<Image
+		<img
 		src={image}
 		alt={name}
 		width={500}
