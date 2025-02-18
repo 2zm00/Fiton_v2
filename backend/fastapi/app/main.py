@@ -11,7 +11,7 @@ import tempfile
 from app.pose import analyze_pose, draw_pose_landmarks,minio_client
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-import shutil
+
 from app.chat import chat_with_bot
 
 load_dotenv()
@@ -45,13 +45,16 @@ async def chat_endpoint(question: str):
 async def analyze_video(file: UploadFile = File(...)):
     """업로드된 영상을 분석하고 MinIO에 저장"""
     try:
-        # 1. 업로드된 파일을 로컬에 저장 (Windows 환경 대응)
-        temp_video_path = f"temp_{file.filename}"
-        with open(temp_video_path, "wb") as temp_video_file:
-            shutil.copyfileobj(file.file, temp_video_file)
+        
+        # 1️ 파일을 임시 디렉토리에 저장
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file: #1번
+            temp_video_path = temp_video_file.name
+            temp_video_file.write(await file.read())
 
-        # 2. OpenCV에서 영상 열기
-        cap = cv2.VideoCapture(temp_video_path)
+        # OpenCV에서 임시 파일 경로로 영상 열기
+        cap = cv2.VideoCapture(temp_video_path) #2번 
+
+        # 2️ OpenCV에서 임시 파일 경로로 영상 열기
         if not cap.isOpened():
             raise HTTPException(status_code=400, detail="영상을 열 수 없습니다.")
 
@@ -60,41 +63,37 @@ async def analyze_video(file: UploadFile = File(...)):
         fps = cap.get(cv2.CAP_PROP_FPS)
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
-        # 3. 분석된 영상을 저장할 임시 파일 생성
-        output_video_path = f"analyzed_{file.filename}"
-        out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
+        # 3 분석된 영상 저장을 위한 임시 파일 생성
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_output_file:
+            output_video_path = temp_output_file.name #3번
+
+        out = cv2.VideoWriter(output_video_path , fourcc, fps, (width, height)) #4번
 
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
                 break
-            # 여기에 분석 코드 추가
-            # results = analyze_pose(frame)
-            # annotated_frame = draw_pose_landmarks(frame, results)
-            # 임시로 원본 그대로 저장
-            out.write(frame)
+            results = analyze_pose(frame)
+            annotated_frame = draw_pose_landmarks(frame, results)
+            out.write(annotated_frame)
 
         cap.release()
         out.release()
 
-        # 4. MinIO에 업로드
-        analyzed_filename = f"fastapi/analyze/pose_{file.filename}"
-        minio_client.upload_file(output_video_path, MINIO_BUCKET_NAME, analyzed_filename, ExtraArgs={"ContentType": "video/mp4"})
-
-        # 5. Presigned URL 생성
-        presigned_url = minio_client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": MINIO_BUCKET_NAME, "Key": analyzed_filename},
-            ExpiresIn=3600  # 1시간 동안 유효
+        # 5. MinIO에 업로드
+        # output_video.seek(0)
+        analyzed_filename = f"pose_{file.filename}"
+        minio_client.fput_object(
+            MINIO_BUCKET_NAME, analyzed_filename, output_video_path, content_type="video/mp4"
         )
 
-        # 6. 로컬 임시 파일 삭제
-        os.remove(temp_video_path)
-        os.remove(output_video_path)
+        # 6.영상 URL 반환
+        video_url = f"http://{MINIO_ENDPOINT}/{MINIO_BUCKET_NAME}/fastapi/analyze/{analyzed_filename}"
+        return FileResponse(video_url, media_type="video/mp4")
 
-        # 7. Presigned URL 반환
-        return JSONResponse(content={"video_url": presigned_url}, status_code=200)
-
+        # 7️ 임시 파일 삭제 (메모리 관리)
+        # os.remove(temp_video_path)
+        # os.remove(output_video_path)
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
