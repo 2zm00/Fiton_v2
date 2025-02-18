@@ -81,15 +81,17 @@ def draw_pose_landmarks(frame, results):
 
 import tempfile
 
-@app.post("api/analyze")
+@app.post("/api/analyze")
 async def analyze_video(file: UploadFile = File(...)):
     """업로드된 영상을 분석하고 MinIO에 저장"""
     try:
-        
+        print(" 파일 업로드 시작")
         # 1️ 파일을 임시 디렉토리에 저장
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file: #1번
             temp_video_path = temp_video_file.name
             temp_video_file.write(await file.read())
+
+        print(f" Temp video file saved at: {temp_video_path}")  # 로그 추가
 
         # OpenCV에서 임시 파일 경로로 영상 열기
         cap = cv2.VideoCapture(temp_video_path) #2번 
@@ -108,6 +110,8 @@ async def analyze_video(file: UploadFile = File(...)):
             output_video_path = temp_output_file.name #3번
 
         out = cv2.VideoWriter(output_video_path , fourcc, fps, (width, height)) #4번
+        
+        print(f" Processed video file will be saved at: {output_video_path}")  # 로그 추가
 
         while cap.isOpened():
             ret, frame = cap.read()
@@ -120,6 +124,8 @@ async def analyze_video(file: UploadFile = File(...)):
         cap.release()
         out.release()
 
+        print(f" Processed video saved at: {output_video_path}")  # 로그 추가
+
         # 5. MinIO에 업로드
         # output_video.seek(0)
         analyzed_filename = f"pose_{file.filename}"
@@ -129,16 +135,22 @@ async def analyze_video(file: UploadFile = File(...)):
 
         # 6.영상 URL 반환
         video_url = f"http://{MINIO_ENDPOINT}/{MINIO_BUCKET_NAME}/{analyzed_filename}"
-        return JSONResponse(content={"message": "운동 자세 분석 완료!", "video_url": video_url})
+        print(f" Video uploaded to MinIO: {video_url}")  # 로그 추가
+
+        return JSONResponse(content={"message": "운동 자세 분석 완료!", "video_url": video_url}, content_type="application/json")
 
         # 7️ 임시 파일 삭제 (메모리 관리)
         # os.remove(temp_video_path)
         # os.remove(output_video_path)
     except Exception as e:
+        print(f" Error: {e}")  # 로그 추가
+        import traceback
+        traceback.print_exc()  # 상세 에러 출력
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
-@app.get("api/analyze/{filename}")
+@app.get("/api/analyze/{filename}")
 async def get_video_url(filename: str):
     """MinIO에서 분석된 영상의 URL 반환"""
     video_url = f"http://{MINIO_ENDPOINT}/{MINIO_BUCKET_NAME}/fastapi/analyze/{filename}"
-    return JSONResponse(content={"video_url": video_url})
+    return JSONResponse(content={"video_url": video_url}, content_type="application/json")
+    # return JSONResponse(content={"video_url": video_url})
