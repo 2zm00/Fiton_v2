@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from users.models import Instructor ,Member
 from centers.models import Center,Exercise
+from datetime import timedelta
 
 # 수업 모델 
 class Lesson(models.Model):
@@ -13,7 +14,7 @@ class Lesson(models.Model):
     location = models.TextField(max_length=255,verbose_name="수업 장소")
     duration = models.PositiveIntegerField(default=60, verbose_name="진행 시간(분)")
     def __str__(self):
-        return f"{self.name} ({self.center.exercise.name})"
+        return f"{self.name} ({self.exercise.name})"
 
 class Lesson_schedule(models.Model):
     lesson= models.ForeignKey(Lesson , on_delete=models.CASCADE, related_name='lesson_schedules',verbose_name="수업 내용")
@@ -21,6 +22,12 @@ class Lesson_schedule(models.Model):
     reservation_permission = models.DateTimeField(verbose_name="예약 가능 시간", null=True, blank=True)
     cancellation_permission = models.DateTimeField(verbose_name="예약 취소 날짜", null=True,blank=True)
     max_member = models.IntegerField(verbose_name="최대 인원")
+    def save(self, *args, **kwargs):
+        if not self.reservation_permission:
+            self.reservation_permission = self.start_lesson - timedelta(days=7)
+        if not self.cancellation_permission:
+            self.cancellation_permission = self.start_lesson - timedelta(days=1)
+        super().save(*args, **kwargs)
     def __str__(self):
         return f"{self.lesson.name} ({self.start_lesson.strftime('%Y년 %m월 %d일 %H시 %M분')})"
         
@@ -38,4 +45,4 @@ class LessonTicketOwner(models.Model):
     quantity=models.PositiveIntegerField(default=0,verbose_name="수업권 개수")
     used_count = models.PositiveIntegerField(default=0,verbose_name="사용한 수업권 횟수") 
     def __str__(self):
-        return f"수강생 {self.member.name}, 수업: {self.Lesson_ticket.lesson.name}"
+        return f"수강생 {self.member.user.name}, 수업: {self.Lesson_ticket.lesson.name}"

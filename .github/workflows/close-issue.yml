@@ -1,0 +1,22 @@
+name: Close Issue and Move to Done
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  close_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close related issue
+        uses: actions-ecosystem/action-add-comment@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          comment_body: |
+            PR이 병합되었습니다! 관련 이슈를 닫습니다.
+      - name: Move issue to Done column
+        uses: alex-page/github-project-automation-plus@v0.6.0
+        with:
+          project_url: https://github.com/<owner>/<repo>/projects/<project_number>
+          column_name: Done
