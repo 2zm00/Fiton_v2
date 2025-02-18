@@ -84,15 +84,15 @@ async def analyze_video(file: UploadFile = File(...)):
         out.release()
 
         # # 메타데이터 설정
-        metadata = {
-        'Content-Type': 'video/mp4'}
+        # metadata = {
+        # 'Content-Type': 'video/mp4'}
        
         
         # 5. MinIO에 업로드
         # output_video.seek(0)
         analyzed_filename = f"fastapi/analyze/pose_{file.filename}"
         minio_client.fput_object(
-            MINIO_BUCKET_NAME, analyzed_filename, output_video_path, content_type= "video/mp4", metadata=metadata
+            MINIO_BUCKET_NAME, analyzed_filename, output_video_path, content_type= "video/mp4" #metadata=metadata
         )
 
         # 6.영상 URL 반환
