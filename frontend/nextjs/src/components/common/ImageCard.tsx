@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 
 interface ImageCardProps {
   image: string; // 이미지 경로
@@ -21,7 +20,7 @@ export default function ImageCard({
 	return (
 	<div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300">
 		{/* 이미지 */}
-		<Image
+		<img
 		src={image}
 		alt={title}
 		width={300}

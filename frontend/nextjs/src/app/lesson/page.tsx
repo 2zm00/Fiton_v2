@@ -2,45 +2,52 @@
 
 import React from 'react';
 import LessonCard from '@/components/lesson/LessonCard';
+import { MINIO_URL } from '@/lib/config';
 
 export default function Lesson() {
   // 더미 데이터 (수업 정보)
 	const lessons = [
 	{
 		id: 1,
-		image: '/images/lesson1.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins24.jpg`,
 		title: '요가 클래스',
 		description: '몸과 마음의 균형을 찾는 요가 클래스입니다.',
+		buttonText :'요가 체험하기'
 	},
 	{
 		id: 2,
-		image: '/images/lesson2.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins3.jpg`,
 		title: '필라테스 클래스',
 		description: '근력을 강화하고 유연성을 높이는 필라테스.',
+		buttonText :'유연성 높이기'
 	},
 	{
 		id: 3,
-		image: '/images/lesson3.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins18.jpg`,
 		title: '줌바 댄스',
 		description: '즐겁게 춤추며 칼로리를 태우는 줌바 댄스.',
+		buttonText :'춤추기'
 	},
 	{
 		id: 4,
-		image: '/images/lesson4.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins15.jpg`,
 		title: '크로스핏 훈련',
 		description: '체력을 극대화하는 고강도 크로스핏 훈련.',
+		buttonText :'고강도 운동하러가기'
 	},
 	{
 		id: 5,
-		image: '/images/lesson5.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins6.jpg`,
 		title: '명상 클래스',
 		description: '마음을 편안하게 하는 명상 클래스.',
+		buttonText :''
 	},
 	{
 		id: 6,
-		image: '/images/lesson6.jpg',
+		image: `${MINIO_URL}/nextjs/instructor/profile/ins20.jpg`,
 		title: '헬스 트레이닝',
 		description: '개인 맞춤형 헬스 트레이닝 프로그램.',
+		buttonText :''
 	},
 	];
 
@@ -60,6 +67,7 @@ export default function Lesson() {
 			image={lesson.image}
 			title={lesson.title}
 			description={lesson.description}
+			buttonText={lesson.buttonText}
 			/>
 		))}
 		</div>

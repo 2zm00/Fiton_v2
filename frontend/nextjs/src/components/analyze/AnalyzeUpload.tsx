@@ -90,6 +90,7 @@ export default function AnalyzeUpload() {
 			<div className="aspect-video bg-black rounded-lg overflow-hidden">
 				<video
 				controls
+				crossOrigin="use-credentials"
 				src={videoUrl}
 				className="w-full h-full object-contain"
 				>
