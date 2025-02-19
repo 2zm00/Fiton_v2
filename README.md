@@ -140,7 +140,10 @@
 5. Milestone 계획표  
 6. MinIO 스토리지 구성 문서  
 7. Docker/nginx 설정 문서  
-8. LLM 코드 리뷰 결과물  
+8. LLM 코드 리뷰 결과물
+
+   
+![시스템 아키텍쳐](https://github.com/user-attachments/assets/8e7dcabe-246f-4dcf-9bcc-34b712979917)
 
 ---
 
