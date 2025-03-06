@@ -92,8 +92,8 @@
    - Django와 FastAPI 기반 백엔드 개발 환경 구축
    - API 엔드포인트 설계 및 모킹 데이터 생성 (Faker 활용)
 2. **[인프라 구축](pplx://action/followup)**
- - Docker Compose를 활용한 컨테이너 기반 마이크로서비스 아키텍처 구현
- - AWS EC2 ,Oracle Cloud 인스턴스 운영 및 관리
+   - Docker Compose를 활용한 컨테이너 기반 마이크로서비스 아키텍처 구현
+   - AWS EC2 ,Oracle Cloud 인스턴스 운영 및 관리
 3. **[DevOps 환경 구축](pplx://action/followup)**
    - Docker 컨테이너 기반 배포 자동화
 4. **[AI 기능 구현](pplx://action/followup)**
