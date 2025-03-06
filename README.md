@@ -91,8 +91,13 @@
 1. **[백엔드](pplx://action/followup)**
    - Django와 FastAPI 기반 백엔드 개발 환경 구축
    - API 엔드포인트 설계 및 모킹 데이터 생성 (Faker 활용)
-2. **[DevOps 환경 구축](pplx://action/followup)**
+2. **[인프라 구축](pplx://action/followup)**
+ - Docker Compose를 활용한 컨테이너 기반 마이크로서비스 아키텍처 구현
+ - AWS EC2 ,Oracle Cloud 인스턴스 운영 및 관리
+3. **[DevOps 환경 구축](pplx://action/followup)**
    - Docker 컨테이너 기반 배포 자동화
+4. **[AI 기능 구현](pplx://action/followup)**
+   - Langchain과 HuggingFace 기반 AI 챗봇 서비스 개발
 
 ### [@betkim (AI 운동 자세 분석 담당)](pplx://action/followup)
 #### [주요 역할:](pplx://action/followup)
